@@ -251,31 +251,23 @@
                                         }
                                         else
                                         {
-                                            <a>Còn hàng</a>
+                                            <a style="font-family: -webkit-body">Còn hàng(còn @Model.Product.Stock sản phẩm)</a>
                                         }
 
                                     </div>
                                 </div>
                                 <p class="short-desc mb-6">
-                                    Lorem ipsum dolor sit amet, consecte adipisicin elit, sed do
-                                    eiusmod tempor incidi ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercita ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+                                        @Html.Raw(Model.Product.Details)
                                 </p>
                                 <ul class="quantity-with-btn pb-7">
-                                    <li class="quantity">
-                                        <div class="cart-plus-minus">
-                                            <input class="cart-plus-minus-box" value="1" type="text">
-                                        </div>
-                                    </li>
                                     @if (Model.Product.Stock == 0)
                                     {
                                     }
                                     else
                                     {
-                                        <li class="add-to-cart">
+                                        <li class="add-to-cart" style="background: #bac34e;">
                                             <div class="add-to-cart" style="margin-top:10px">
-                                                <button class="add-to-cart-btn" data-id="@Model.Product.Id"><i class="fa fa-shopping-cart"></i>Thêm Vào Giỏ Hàng</button>
+                                                <button style="background: #bac34e; color: white; border: none; height: 40px; font-family: emoji; padding-bottom: 10px;" class="add-to-cart-btn" data-id="@Model.Product.Id">Thêm Vào Giỏ Hàng</button>
                                             </div>
                                         </li>
 
@@ -363,14 +355,7 @@
                                 <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
                                     <div class="product-description-body">
                                         <p class="short-desc mb-0">
-                                            @{
-                                                string html = @Model.Product.Description;
-                                                string removeFirstFigure = html.Remove(0, 22);
-                                                string removeLastFigure = removeFirstFigure.Remove(removeFirstFigure.Length - 9);
-                                                string addedTableFormat = removeLastFigure.Insert(6, " class=\"table table-bordered table-striped\"");
-                                            }
-                                            @Html.Raw(addedTableFormat)
-                                            @*@Html.Raw(Model.Product.Description)*@
+                                            @Html.Raw(Model.Product.Description)
                                         </p>
                                     </div>
                                 </div>
