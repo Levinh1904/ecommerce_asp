@@ -41,12 +41,13 @@
                         @if (item.Stock < 0) { }
                         else
                         {
-                        <div class="add-to-cart">
-                            <button class="add-to-cart-btn" data-id="@item.Id"><i class="fa fa-shopping-cart"></i> thêm vào giỏ hàng</button>
-                        </div>
+                            <a href="#" class="add-to-cart-btn add-to-cart" data-id="@item.Id">
+                                <i class="pe-7s-cart"></i>
+                            </a>
+                            
                         }
-                    
-                                    </li>
+
+                    </li>
                     <li>
                         <a href="wishlist.html">
                             <i class="pe-7s-like"></i>

@@ -57,22 +57,18 @@
                                     <ul class="dropdown-wrap text-matterhorn">
                                         @{ var claims = User.Claims.ToList();
                                             var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName).Value; }
-                                        <li><a href="#">Xin chào <strong>@name</strong></a></li>
+                                        <li style="font-family: 'FontAwesome';"><a href="#">Xin chào <strong>@name</strong></a></li>
                                     </ul> }
                                 else
                                 {
                                     <ul class="dropdown-wrap text-matterhorn">
-                                        <li><a href="#">Xin chào <strong>quý khách!</strong></a></li>
+                                        <li style="font-family: 'FontAwesome';"><a href="#">Xin chào <strong>quý khách!</strong></a></li>
                                     </ul>}
                             </div>
-                            <a href="/@culture/cart">
-                                <i class="pe-7s-shopbag"></i>
-                                <span class="quantity qty" id="lbl_number_of_items_header">0</span>
-                            </a>
                         </div>
                         <div class="col-6 ">
                             <div class="header-top-right text-matterhorn col-6 ">
-                                <p class="shipping mb-0">Free delivery on order over <span>$200</span></p>
+                                <p class="shipping mb-0"></p>
                             </div>
                         </div>
                     </div>
@@ -88,7 +84,7 @@
                                 </a>
                                 <div class="header-search-area d-none d-lg-block">
                                     <form asp-action="ViewBySearchProduct" asp-controller="Home" method="get" class="header-searchbox">
-                                        <input value="@ViewBag.Keyword" name="keyword" class="input-field input" type="text" placeholder="Search Products">
+                                        <input value="@ViewBag.Keyword" name="keyword" class="input-field input" type="text" placeholder="Tìm kiếm">
                                         <button class="btn btn-outline-whisper btn-primary-hover search-btn" type="submit"><i class="pe-7s-search"></i></button>
                                     </form>
                                 </div>
@@ -110,8 +106,8 @@
                                             else
                                             {
                                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
-                                                    <li><a asp-action="Login" asp-controller="Login"> Đăng nhập</a></li>
-                                                    <li><a asp-action="Register" asp-controller="Login"> Đăng ký</a></li>
+                                                    <li style="margin-left: 20px; font-family: 'Pe-icon-7-stroke';"><a asp-action="Login" asp-controller="Login"> Đăng nhập</a></li>
+                                                    <li style="margin-left: 20px; font-family: 'Pe-icon-7-stroke';"><a asp-action="Register" asp-controller="Login"> Đăng ký</a></li>
                                                 </ul>}
                                         </li>
                                         

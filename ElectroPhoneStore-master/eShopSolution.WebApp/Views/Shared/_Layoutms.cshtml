@@ -1,10 +1,4 @@
-﻿
-@{
-    Layout = null;
-}
-@model eShopSolution.ViewModels.System.Users.LoginRequest
-@{ ViewData["Title"] = "Đăng Nhập";}
-@{ var culture = CultureInfo.CurrentCulture.Name; }
+﻿@{ var culture = CultureInfo.CurrentCulture.Name; }
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 
 <!DOCTYPE html>
@@ -154,58 +148,14 @@
             </div>
             <div class="global-overlay"></div>
         </header>
-
-        <div class="login-register-area section-space-y-axis-100">
+        <!-- Main Header Area End Here -->
+        <!-- Begin Slider Area -->
+        <div class="product-area product-style-2 section-space-y-axis-100">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <form action="/@culture/Login/Login" method="post" class="box-authentication">
-                            <h4>Đăng nhập</h4>
-                            <p class="before-login-text" style="font-family: 'Pe-icon-7-stroke';">Chào mừng quay trở lại! Hãy đăng nhập vào tài khoản của bạn</p>
-                            <div>
-                                <label for="emmail_login" style="font-family: 'Pe-icon-7-stroke';">Tài khoản<span class="required" style="color:red">*</span></label>
-                                <input asp-for="UserName" type="text" class="form-control">
-                            </div>
-                            <div>
-                                <label for="password_login" style="font-family: 'Pe-icon-7-stroke';">Mật khẩu<span class="required" style="color:red">*</span></label>
-                                <input asp-for="Password" type="password" class="form-control">
-                            </div>
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                            <span class="text-danger">@Html.ValidationSummary(true)</span>
-                            <p class="forgot-pass"><a asp-action="ForgotPassword" style="font-family: auto; color: red;">Bạn quên mật khẩu?</a></p>
-                            <button class="button" style="margin-right: 10px; margin-right: 10px; background: #bac34e; color: white; border: none; font-family: 'FontAwesome'; font-weight: 900; height: 35px; padding-left: 15px; padding-right: 15px;"><i class="fa fa-lock"></i>&nbsp; <span>Đăng nhập</span></button>
-                            <label class="inline" for="rememberme" style="font-family: 'Pe-icon-7-stroke';">
-                                <input asp-for="RememberMe" type="checkbox">
-                                Ghi nhớ đăng nhập
-                            </label>
-                        </form>
-                    </div>
-                    <div class="col-lg-6 pt-10 pt-lg-0">
-                        <form action="#">
-                            <div class="login-form">
-                                <h4 class="login-title">Thành Viên Mới</h4>
-                                <p style="font-family: -webkit-body;
-                                    font-size: 20px;">Nếu bạn chưa là thành viên, bạn cần vào trang đăng ký và tạo tài khoản.</p>
-                                <p style="font-family: -webkit-body;
-                                    font-size: 20px;">Bằng cách tạo tài khoản với cửa hàng của chúng tôi, bạn sẽ có thể thực hiện quy trình thanh toán nhanh hơn, lưu trữ nhiều địa chỉ giao hàng, xem và theo dõi đơn đặt hàng trong tài khoản của bạn và hơn thế nữa.</p>
-                                <div class="xs-margin"></div><a asp-action="Register" asp-controller="Login" class="btn btn-custom btn-lg" style="font-family: 'Playfair Display';
-                                    font-weight: bold;
-                                    ">Đăng ký tài khoản</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                @RenderBody()
             </div>
         </div>
-
-
-        <style>
-            a.btn.btn-custom.btn-lg:hover {
-                color: #bac34e;
-            }
-        </style>
-
+       
         <div class="footer-area">
             <div class="footer-top section-space-y-axis-100 text-black" data-bg-color="#e5ddcc">
                 <div class="container">
@@ -352,6 +302,7 @@
         var siteController = new SiteController();
         siteController.initialize();
     </script>
+    @RenderSection("scripts", required: false)
 </body>
 
 </html>
