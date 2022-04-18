@@ -20,22 +20,6 @@
 }
 
 <!-- BREADCRUMB -->
-<div id="breadcrumb" class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="breadcrumb-tree">
-                    <li><a href="/">Trang chủ</a></li>
-                    <li>Giỏ hàng</li>
-                </ul>
-            </div>
-        </div>
-        <!-- /row -->
-    </div>
-    <!-- /container -->
-</div>
 <!-- /BREADCRUMB -->
 
 <section class="main-container col1-layout">
@@ -47,12 +31,12 @@
                     <h2>Giỏ hàng</h2>
                 </div>
 
-                <div class="order-detail-content">
+                <div class="order-detail-content" style="font-family: 'FontAwesome';">
                     <div class="table-responsive">
                         <table class="table table-bordered cart_summary" id="tbl_cart">
                             <thead>
-                                <tr>
-                                    <th class="cart_product">Hình ảnh</th>
+                                <tr style="font-family: 'FontAwesome';">
+                                    <th class="cart_product" style="font-family: 'FontAwesome';">Hình ảnh</th>
                                     <th>Tên</th>
                                     <th class="text-center">Số lượng trong kho</th>
                                     <th>Đơn giá</th>
@@ -124,7 +108,19 @@
     /******************************************
     29. shopping cart
     ******************************************/
-
+    button.btn-minus {
+        border: none;
+        height: 30px;
+        width: 30px;
+        margin-left: 10px;
+    }
+    button.btn-plus {
+        border: none;
+        height: 30px;
+        width: 30px;
+        margin-left: 10px;
+        /* background: #bac34e; */
+    }
     .page-order ul.step {
         width: 100%;
         clear: both;

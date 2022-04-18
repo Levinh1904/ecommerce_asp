@@ -1,4 +1,10 @@
-﻿@model OrderByUserViewModel
+﻿
+@{
+    ViewData["Title"] = "Tài Khoản";
+    Layout = "~/Views/Shared/_Layoutms.cshtml";
+}
+
+@model OrderByUserViewModel
 @using eShopSolution.ViewModels.Common;
 @using eShopSolution.ViewModels.Utilities.Enums;
 
@@ -44,24 +50,6 @@
             }
 </style>
 
-<!-- BREADCRUMB -->
-<div id="breadcrumb" class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="breadcrumb-tree">
-                    <li><a href="/">Trang chủ</a></li>
-                    <li>Tài khoản</li>
-                </ul>
-            </div>
-        </div>
-        <!-- /row -->
-    </div>
-    <!-- /container -->
-</div>
-<!-- /BREADCRUMB -->
 <!-- Main Container -->
 <section class="main-container col2-right-layout">
     <div class="main container">
@@ -73,10 +61,8 @@
                 </div>
                 <div class="col-main col-sm-12 col-xs-12">
                     <div class="welcome-msg">
-                        @{
-                            var claims = User.Claims.ToList();
-                            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName).Value;
-                        }
+                        @{ var claims = User.Claims.ToList();
+                                        var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName).Value; }
                         <strong>Xin chào, @name!</strong>
                         <p>Từ Trang tổng quan tài khoản của bạn, bạn có thể xem về các đơn hàng gần đây và cập nhật thông tin tài khoản của mình.</p>
                     </div>
@@ -84,40 +70,37 @@
 
                         @if (TempData["CancelOrderSuccess"] != null)
                         {
-                            <script>
-                                Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'Hủy đơn thành công',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                            </script>
-                        }
+            <script>
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Hủy đơn thành công',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script> }
                         else if (TempData["UpdateAccountSuccess"] != null)
                         {
-                            <script>
-                                Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'Cập nhật thông tin cá nhân thành công',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                            </script>
-                        }
+            <script>
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Cập nhật thông tin cá nhân thành công',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script> }
                         else if (TempData["ChangePasswordSuccess"] != null)
                         {
-                            <script>
-                                Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'Cập nhật mật khẩu thành công',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                            </script>
-                        }
+            <script>
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Cập nhật mật khẩu thành công',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            </script>}
 
                         <div class="title-buttons"><strong>Đơn hàng gần đây</strong> <a href="#">View All </a> </div>
 
@@ -159,13 +142,12 @@
                                 <tbody>
                                     @foreach (var item in Model.Orders)
                                     {
-                                        <tr class="first odd">
-                                            <td>@item.Id</td>
-                                            <td>@item.Name</td>
-                                            <td class="text-center">@item.OrderDate</td>
-                                            <td class="text-center">
-                                                @{
-                                                    var status = "";
+                        <tr class="first odd">
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td class="text-center">@item.OrderDate</td>
+                            <td class="text-center">
+                                @{ var status = "";
                                                     var statusEnum = (int)item.Status;
                                                     switch (statusEnum)
                                                     {
@@ -187,58 +169,77 @@
                                                         default:
                                                             status = "...";
                                                             break;
-                                                    }
-                                                }
-                                                <i>@status</i>
-                                            </td>
-                                            <td class="text-center">
+                                                    } }
+                                <i>@status</i>
+                            </td>
+                            <td class="text-center">
 
-                                                <strong>
-                                                    @item.Price.ToString("N0")
-                                                    <span>&#8363;</span>
-                                                </strong>
-                                            </td>
-                                            <td class="text-center">
+                                <strong>
+                                    @item.Price.ToString("N0")
+                                    <span>&#8363;</span>
+                                </strong>
+                            </td>
+                            <td class="text-center">
 
-                                                @if (item.Status == (OrderStatus)1)
-                                                {
-                                                    @*@Html.ActionLink("Huỷ đơn", "CancelOrderStatus", new { orderId = item.Id })*@
-                                                    <a asp-action="CancelOrderStatus" asp-route-orderId="@item.Id">Hủy đơn</a>
-                                                }
-                                                else if (item.Status == (OrderStatus)2)
-                                                {
-                                                    @*@Html.ActionLink("Huỷ đơn", "CancelOrderStatus", new { orderId = item.Id })*@
-                                                    <a asp-action="CancelOrderStatus" asp-route-orderId="@item.Id">Hủy đơn</a>
-                                                }
-                                            </td>
-                                            <td class="text-center">
-                                                @Html.ActionLink("Xem chi tiết", "OrderDetail", new { orderId = item.Id, name = item.Name })
-                                            </td>
-                                        </tr>
-                                    }
+                                @if (item.Status == (OrderStatus)1)
+                                {@*@Html.ActionLink("Huỷ đơn", "CancelOrderStatus", new { orderId = item.Id })*@
+                                                    <a asp-action="CancelOrderStatus" asp-route-orderId="@item.Id">Hủy đơn</a> }
+                                                                    else if (item.Status == (OrderStatus)2)
+                                                                    { @*@Html.ActionLink("Huỷ đơn", "CancelOrderStatus", new { orderId = item.Id })*@
+                                                                                        <a asp-action="CancelOrderStatus" asp-route-orderId="@item.Id">Hủy đơn</a>}
+                            </td>
+                            <td class="text-center">
+                                @Html.ActionLink("Xem chi tiết", "OrderDetail", new { orderId = item.Id, name = item.Name })
+                            </td>
+                        </tr>}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="box-account">
                         <div class="page-title">
-                            <h2>Thông tin tài khoản</h2>
+                            <h2 style="margin-right:30px">Thông tin tài khoản</h2>
+                             
                         </div>
                         <div class="col2-set">
-                            <div class="col-1">
+                            <div class="col-6">
                                 <h6>Thông tin liên lạc</h6>
-                                <span style="text-decoration:underline">
-                                    @Html.ActionLink("Cập nhật thông tin", "Edit", new { userid = Model.UserID })
-                                </span>
-                                <p>
-                                    @Model.Name<br>
-                                    @Model.Email<br>
-                                    @Model.PhoneNumber<br>
-                                    @Model.Address<br>
-                                </p>
-                                <span style="text-decoration: underline">
-                                    @Html.ActionLink("Đổi mật khẩu", "ChangePassword", new { userid = Model.UserID })
-                                </span>
+                                <div style="margin-top: 10px; font-family: auto;">
+                                    <tr>
+                                        <td>Họ Tên:  </td>
+                                        <td>@Model.Name</td>
+                                    </tr>
+                                </div>
+                                <div style="margin-top: 10px; font-family: auto;">
+                                    <tr>
+                                        <td>Email:  </td>
+                                        <td>@Model.Email</td>
+                                    </tr>
+                                </div>
+                                <div style="margin-top: 10px; font-family: auto;">
+                                    <tr>
+                                        <td>Số điện thoại:  </td>
+                                        <td>@Model.PhoneNumber</td>
+                                    </tr>
+                                </div>
+                                <div style="margin-top: 10px; font-family: auto;margin-bottom:10px"> 
+                                    <tr>
+                                        <td>Địa chỉ:  </td>
+                                        <td>@Model.Address</td>
+                                    </tr>
+                                </div>
+                                
+                                <h2>
+                                    <span style="text-decoration:underline; color:red">
+                                        @Html.ActionLink("Cập nhật tài khoản", "Edit", new { userid = Model.UserID })
+                                    </span>
+                                </h2>
+                                <h4 style="margin-top:20px">
+                                    <span style="text-decoration: underline">
+                                        @Html.ActionLink("Đổi mật khẩu", "ChangePassword", new { userid = Model.UserID })
+                                    </span>
+                                </h4>
+
                             </div>
                         </div>
                     </div>
