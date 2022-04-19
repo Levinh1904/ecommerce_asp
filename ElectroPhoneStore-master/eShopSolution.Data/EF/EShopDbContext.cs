@@ -37,6 +37,8 @@ namespace eShopSolution.Data.EF
             modelBuilder.ApplyConfiguration(new ReviewConfiguration());
 
             modelBuilder.ApplyConfiguration(new CouponConfiguration());
+            modelBuilder.ApplyConfiguration(new SlideConfiguration());
+            modelBuilder.ApplyConfiguration(new ProducerConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
 
@@ -64,5 +66,7 @@ namespace eShopSolution.Data.EF
         public DbSet<Order> Orders { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Slide> Slides { get; set; }
+        public DbSet<Producer> Producers { get; set; }
     }
 }
