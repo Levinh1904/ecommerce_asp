@@ -51,7 +51,7 @@ namespace eShopSolution.Application.Catalog.Slides
             //Save thumbnail image
             if (request.Image != null)
             {
-                slide.Image = await this.SaveFile(request.Image);
+                slide.Image = await SaveFile(request.Image);
             }
             else
             {

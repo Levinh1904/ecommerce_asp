@@ -51,7 +51,7 @@ namespace eShopSolution.ApiIntegration
                     data = br.ReadBytes((int)request.Image.OpenReadStream().Length);
                 }
                 ByteArrayContent bytes = new ByteArrayContent(data);
-                requestContent.Add(bytes, "thumbnailImage", request.Image.FileName);
+                requestContent.Add(bytes, "image", request.Image.FileName);
             }
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Tille) ? " " : request.Tille.ToString()), "tille");
@@ -62,7 +62,7 @@ namespace eShopSolution.ApiIntegration
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateSlide(SlideCreateRequest request)
+        public async Task<bool> UpdateSlide(SlideUpdateRequest request)
         {
             var sessions = _httpContextAccessor
                 .HttpContext

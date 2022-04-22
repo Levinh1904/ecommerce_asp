@@ -13,7 +13,7 @@ namespace eShopSolution.ApiIntegration
     {
         Task<bool> CreateSlide(SlideCreateRequest request);
 
-        Task <bool> UpdateSlide(SlideCreateRequest request);
+        Task <bool> UpdateSlide(SlideUpdateRequest request);
 
         Task<bool> DeleteSlide(int id);
 
