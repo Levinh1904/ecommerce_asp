@@ -1,0 +1,94 @@
+﻿@model eShopSolution.ViewModels.Catalog.Contacts.ContactViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{ ViewData["Title"] = "Chi tiết Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div class="container-fluid">
+    <h1 class="mt-4">Chi tiết Contact @Model.Name</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a style="color: #0779e4;" href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Chi tiết Contact</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Contact">Về danh sách</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="font-weight-bold">
+                                Tên
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Name)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                Gmail
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Gmail)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                SĐT
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.SDT)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                Tille
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Tille)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                Ảnh
+                            </td>
+                            <td>
+                                <img style="width:150px;height:150px" src="@(Configuration["BaseAddress"] + Model.Image)" alt="Alternate Text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                Trạng Thái
+                            </td>
+                            <td>
+                                <select id="cars" asp-for="Status">
+                                    <option value="true">Bật</option>
+                                    <option value="false">Tắt</option>
+                                </select>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less";
+    moreText.style.display = "inline";
+  }
+}</script>
+

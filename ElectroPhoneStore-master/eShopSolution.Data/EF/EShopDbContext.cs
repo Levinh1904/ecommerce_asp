@@ -39,6 +39,8 @@ namespace eShopSolution.Data.EF
             modelBuilder.ApplyConfiguration(new CouponConfiguration());
             modelBuilder.ApplyConfiguration(new SlideConfiguration());
             modelBuilder.ApplyConfiguration(new ProducerConfiguration());
+            modelBuilder.ApplyConfiguration(new ContactConfiguration());
+            modelBuilder.ApplyConfiguration(new BlogConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
 
@@ -68,5 +70,7 @@ namespace eShopSolution.Data.EF
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Slide> Slides { get; set; }
         public DbSet<Producer> Producers { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
     }
 }

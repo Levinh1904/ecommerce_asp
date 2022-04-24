@@ -60,6 +60,8 @@ namespace eShopSolution.AdminApp
             services.AddTransient<ICouponApiClient, CouponApiClient>();
             services.AddTransient<IProducerApiClient, ProducerApiClient>();
             services.AddTransient<ISlideApiClient, SlideApiClient>();
+            services.AddTransient<IBlogApiClient, BlogApiClient>();
+            services.AddTransient<IContactApiClient, ContactApiClient>();
 
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
