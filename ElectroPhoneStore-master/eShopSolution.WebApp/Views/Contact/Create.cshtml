@@ -1,0 +1,48 @@
+﻿@model eShopSolution.ViewModels.Catalog.Contacts.ContactCreateRequest
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layoutms.cshtml";
+}
+<!-- Begin Main Content Area -->
+
+
+    <!-- Begin Shipping Area -->
+    <div class="contact-with-map row">
+        <div class="contact-map col-md-9">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30665.76906690809!2d108.13101990000001!3d16.105857700000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421f4f25cdbdad%3A0x6ce4f8e5167d8f03!2zMTbCsDA2JzAzLjAiTiAxMDjCsDA4JzAwLjgiRQ!5e0!3m2!1sen!2s!4v1650894324596!5m2!1sen!2s" width="800 height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="col-md-3">
+            <h4>Phản hồi với chúng tôi</h4>
+            <form asp-action="Create" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label style="font-family: 'FontAwesome'; margin-top: 20px; " asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label style="font-family: 'FontAwesome'; margin-top: 20px; " asp-for="Gmail" class="control-label"></label>
+                    <input asp-for="Gmail" class="form-control" />
+                    <span asp-validation-for="Gmail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label style="font-family: 'FontAwesome'; margin-top: 20px; " asp-for="SDT" class="control-label"></label>
+                    <input asp-for="SDT" class="form-control" />
+                    <span asp-validation-for="SDT" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label style="font-family: 'FontAwesome'; margin-top: 20px; " asp-for="Tille" class="control-label"></label>
+                    <input asp-for="Tille" class="form-control" />
+                    <span asp-validation-for="Tille" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input style="margin-top: 30px; font-family: 'Playfair Display';" type="submit" value="Tạo mới" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+

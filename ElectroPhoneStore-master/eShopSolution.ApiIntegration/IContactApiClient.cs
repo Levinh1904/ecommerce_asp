@@ -15,7 +15,8 @@ namespace eShopSolution.ApiIntegration
         Task<bool> UpdateContact(ContactUpdateRequest request);
 
         Task<bool> DeleteContact(int id);
-
+        Task<ApiResult<string>> ContactCreate(ContactCreateRequest contactRequest);
+        Task<ApiResult<ContactViewModel>> GetByUserName(string userName);
         Task<ContactViewModel> GetById(int id);
 
         Task<List<ContactViewModel>> GetAll();

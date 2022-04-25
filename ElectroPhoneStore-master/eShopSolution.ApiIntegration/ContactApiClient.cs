@@ -4,6 +4,7 @@ using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -119,7 +120,42 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
+        public async Task<ApiResult<string>> ContactCreate(ContactCreateRequest contactRequest)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+
+            var json = JsonConvert.SerializeObject(contactRequest);
+
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync($"/api/contacts", httpContent);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<string>>(result);
+
+            return JsonConvert.DeserializeObject<ApiErrorResult<string>>(result);
+        }
+        public async Task<ApiResult<ContactViewModel>> GetByUserName(string userName)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var response = await client.GetAsync($"/api/users/getByUserName/{userName}");
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<ContactViewModel>>(body);
+
+            return JsonConvert.DeserializeObject<ApiErrorResult<ContactViewModel>>(body);
+        }
 
     }
-    
+
 }
