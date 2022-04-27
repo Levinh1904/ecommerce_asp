@@ -10,6 +10,8 @@ namespace eShopSolution.Data.Entities
         public string Name { get; set; }
         public string Image { get; set; }
         public string Tille { get; set; }
+        public string Details { get; set; }
         public bool Status { get; set; }
+        public DateTime Starttime {get;set;}
     }
 }

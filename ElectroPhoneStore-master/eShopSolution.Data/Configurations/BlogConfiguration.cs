@@ -20,6 +20,8 @@ namespace eShopSolution.Data.Configurations
             builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Image).HasMaxLength(300).IsRequired(false);
             builder.Property(x => x.Tille).IsRequired().HasMaxLength(200);
+            builder.Property(x => x.Details).IsRequired().HasMaxLength(5000);
+            builder.Property(x => x.Starttime).IsRequired();
             builder.Property(x => x.Status).IsRequired();
         }
     }

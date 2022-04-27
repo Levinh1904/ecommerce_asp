@@ -21,9 +21,12 @@
                                         @*@Html.ActionLink(category.Name, "ViewByCategory", "Home", new { cateId = category.Id })*@
                                         <a asp-action="ViewByCategory" asp-controller="Home" asp-route-cateId="@category.Id">@category.Name</a>
                                     </li>
-}
+                                }
                                 <li>
                                     <a asp-action="Index" asp-controller="Coupon">Khuyến Mãi</a>
+                                </li>
+                                <li>
+                                    <a asp-action="Index" asp-controller="Blog">Blog</a>
                                 </li>
                                 <li>
                                     <a asp-action="Create" asp-controller="Contact">Liên Hệ</a>

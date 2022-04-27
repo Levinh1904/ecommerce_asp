@@ -45,6 +45,8 @@ namespace eShopSolution.Application.Catalog.Blogs
                 Name = request.Name,
                 Tille = request.Tille,
                 Status =true,
+                Details = request.Details,
+                Starttime = DateTime.Now,
             };
 
             //Save thumbnail image
@@ -67,21 +69,23 @@ namespace eShopSolution.Application.Catalog.Blogs
 
         public async Task<int> Update(BlogUpdateRequest request)
         {
-            var slide = await _context.Blogs.FindAsync(request.Id);
-            if (slide == null) throw new EShopException($"Không thể tìm Blog có ID: {request.Id} ");
+            var blog = await _context.Blogs.FindAsync(request.Id);
+            if (blog == null) throw new EShopException($"Không thể tìm Blog có ID: {request.Id} ");
 
-            slide.Name = request.Name;
-            slide.Tille = request.Tille;
-            slide.Status = request.Status;
+            blog.Name = request.Name;
+            blog.Tille = request.Tille;
+            blog.Status = request.Status;
+            blog.Details = request.Details;
+            blog.Starttime = DateTime.Now;
 
             //Save thumbnail image
             if (request.Image != null)
             {
-                slide.Image = await this.SaveFile(request.Image);
+                blog.Image = await this.SaveFile(request.Image);
             }
             else
             {
-                slide.Image = "/user-content/no-image.png";
+                blog.Image = "/user-content/no-image.png";
             }
 
             return await _context.SaveChangesAsync();
@@ -125,6 +129,8 @@ namespace eShopSolution.Application.Catalog.Blogs
                 Image = x.c.Image,
                 Tille = x.c.Tille,
                 Status = "true",
+                Details = x.c.Details,
+                Starttime = DateTime.Now,
             }).FirstOrDefaultAsync();
         }
         public async Task<List<BlogViewModel>> GetAll()
@@ -139,6 +145,8 @@ namespace eShopSolution.Application.Catalog.Blogs
                 Image = x.c.Image,
                 Tille = x.c.Tille,
                 Status = "true",
+                Details = x.c.Details,
+                Starttime = DateTime.Now,
             }).ToListAsync();
         }
 
@@ -162,6 +170,8 @@ namespace eShopSolution.Application.Catalog.Blogs
                     Image = x.c.Image,
                     Tille = x.c.Tille,
                     Status = "true",
+                    Details = x.c.Details,
+                    Starttime = DateTime.Now,
                 }).ToListAsync();
 
             //4. Select and projection

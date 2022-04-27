@@ -56,7 +56,10 @@ namespace eShopSolution.ApiIntegration
             }
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Tille) ? " " : request.Tille.ToString()), "tille");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Details) ? " " : request.Details.ToString()), "details");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Starttime.ToString()) ? " " : request.Starttime.ToString()), "starttime");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Status.ToString()) ? " " : request.Status.ToString()), "status");
+            
 
             var response = await client.PostAsync($"/api/blogs/", requestContent);
             return response.IsSuccessStatusCode;
@@ -88,6 +91,8 @@ namespace eShopSolution.ApiIntegration
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Tille) ? " " : request.Tille.ToString()), "tille");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Status.ToString()) ? " " : request.Status.ToString()), "status");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Details) ? " " : request.Details.ToString()), "details");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Starttime.ToString()) ? " " : request.Starttime.ToString()), "starttime");
 
             var response = await client.PutAsync($"/api/blogs/" + request.Id, requestContent);
             return response.IsSuccessStatusCode;
@@ -115,6 +120,5 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
-
     }
 }

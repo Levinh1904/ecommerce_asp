@@ -11,5 +11,7 @@ namespace eShopSolution.ViewModels.Catalog.Blogs
         public string Tille { get; set; }
         public string Image { get; set; }
         public string Status { get; set; }
+        public string Details { get; set; }
+        public DateTime Starttime { get; set; }
     }
 }

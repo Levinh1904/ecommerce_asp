@@ -95,6 +95,7 @@ namespace eShopSolution.WebApp
             services.AddTransient<IOrderApiClient, OrderApiClient>();
             services.AddTransient<ICouponApiClient, CouponApiClient>();
             services.AddTransient<IContactApiClient, ContactApiClient>();
+            services.AddTransient<IBlogApiClient, BlogApiClient>();
 
             services.AddMarkdown();
 
@@ -166,7 +167,13 @@ namespace eShopSolution.WebApp
                         controller = "Product",
                         action = "Detail"
                     });
-
+                endpoints.MapControllerRoute(
+                    name: "Blog Detail En",
+                    pattern: "{culture}/blogUrl/{id}", new
+                    {
+                        controller = "Blog",
+                        action = "Details"
+                    });
                 endpoints.MapControllerRoute(
                   name: "Product Detail Vn",
                   pattern: "{culture}/san-pham/{id}", new
