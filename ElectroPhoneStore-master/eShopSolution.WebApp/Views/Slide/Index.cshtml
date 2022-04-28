@@ -1,0 +1,30 @@
+﻿
+@using eShopSolution.ViewModels.Common;
+@model PagedResult<eShopSolution.ViewModels.Catalog.Slides.SlideViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<div class="swiper-container main-slider-2 swiper-arrow with-bg_white">
+    <div class="swiper-wrapper">
+        @foreach (var item in Model.Items)
+        {
+            <div class="swiper-slide animation-style-01">
+                <div class="slide-inner bg-height" data-bg-image="@item.Image">
+                    <div class="container">
+                        <div class="slide-content">
+                            <h2 class="title font-weight-bold mb-4"></h2>
+                            <p class="short-desc different-width mb-9">@item.Name</p>
+                            <div class="button-wrap">
+                                <a class="btn btn-custom-size lg-size btn-primary btn-white-hover rounded-0" href="shop.html">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination with-bg d-md-none"></div>
+
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>

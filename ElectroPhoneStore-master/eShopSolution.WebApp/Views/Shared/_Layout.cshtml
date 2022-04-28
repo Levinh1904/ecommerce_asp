@@ -8,7 +8,7 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Harmic - Home Two</title>
+    <title>Trang Chủ</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,14 +30,6 @@
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <!--sweet aler 2-->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -151,45 +143,7 @@
         <!-- Main Header Area End Here -->
         <!-- Begin Slider Area -->
         <div class="slider-area">
-
-            <!-- Main Slider -->
-            <div class="swiper-container main-slider-2 swiper-arrow with-bg_white">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide animation-style-01">
-                        <div class="slide-inner bg-height" data-bg-image="~/assets/images/slider/bg/2-1.jpg">
-                            <div class="container">
-                                <div class="slide-content">
-                                    <h2 class="title font-weight-bold mb-4">Fresh Organic <br> Products</h2>
-                                    <p class="short-desc different-width mb-9">Best Offer Products 100% Naturan Healthy Food For Your Life</p>
-                                    <div class="button-wrap">
-                                        <a class="btn btn-custom-size lg-size btn-primary btn-white-hover rounded-0" href="shop.html">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide animation-style-01">
-                        <div class="slide-inner bg-height" data-bg-image="~/assets/images/slider/bg/2-2.jpg">
-                            <div class="container">
-                                <div class="slide-content">
-                                    <h2 class="title font-weight-bold mb-4">Fresh Organic <br> Products</h2>
-                                    <p class="short-desc different-width mb-9">Best Offer Products 100% Naturan Healthy Food For Your Life</p>
-                                    <div class="button-wrap">
-                                        <a class="btn btn-custom-size lg-size btn-primary btn-white-hover rounded-0" href="shop.html">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add Pagination -->
-                <div class="swiper-pagination with-bg d-md-none"></div>
-
-                <!-- Add Arrows -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-
+            @await Component.InvokeAsync("Slide")
         </div>
         <!-- Slider Area End Here -->
         <!-- Begin Banner With Category -->
@@ -200,7 +154,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="banner-item">
                                 <div class="banner-img img-zoom-effect">
-                                    <img class="img-full" src="~/assets/images/banner/1-1-370x250.jpg" alt="Banner Image">
+                                    <img class="img-full" src="~/assets/images/banner/1-2-370x250.jpg" alt="Banner Image">
                                     <div class="inner-content">
                                         <h5 class="offer">-10% Off</h5>
                                         <h4 class="title mb-5">Bell Pepper<br>Orange</h4>
@@ -491,7 +445,7 @@
         </div>
         <!-- Product Area End Here -->
         <!-- Begin Banner Area -->
-        <div class="banner-with-testimonial py-10" data-bg-image="~/assets/images/banner/2-1-1920x523.jpg">
+        <div class="banner-with-testimonial py-10" data-bg-image="assets/images/banner/2-1-1920x523.jpg">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
