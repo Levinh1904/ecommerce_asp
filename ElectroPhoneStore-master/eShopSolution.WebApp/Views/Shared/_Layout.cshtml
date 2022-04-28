@@ -102,7 +102,7 @@
                                                     <li style="margin-left: 20px; font-family: 'Pe-icon-7-stroke';"><a asp-action="Register" asp-controller="Login"> Đăng ký</a></li>
                                                 </ul>}
                                         </li>
-                                        
+
                                         <li class="">
                                             <a href="/@culture/cart" class=" ">
                                                 <i class="pe-7s-shopbag"></i>
@@ -445,68 +445,7 @@
         </div>
         <!-- Product Area End Here -->
         <!-- Begin Banner Area -->
-        <div class="banner-with-testimonial py-10" data-bg-image="assets/images/banner/2-1-1920x523.jpg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="parallax-img-wrap">
-                            <div class="papaya">
-                                <div class="scene fill">
-                                    <div class="expand-width" data-depth="0.2">
-                                        <img src="~/assets/images/banner/inner-img/2-1-503x430.png" alt="Banner Images">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 align-self-center">
-                        <div class="swiper-container testimonial-slider text-white">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-content section-title">
-                                            <span class="sub-title">What People Say</span>
-                                            <h2 class="title mb-6">Client Feedback</h2>
-                                            <p class="short-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiu tempor incididj ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                                            <div class="user-info">
-                                                <div class="user-img">
-                                                    <img src="~/assets/images/testimonial/user/1.png" alt="User Image">
-                                                </div>
-                                                <div class="user-content">
-                                                    <span class="user-name">Oscar Thomsen</span>
-                                                    <span class="user-occupation">Customer</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-content section-title">
-                                            <span class="sub-title">What People Say</span>
-                                            <h2 class="title mb-6">Client Feedback</h2>
-                                            <p class="short-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiu tempor incididj ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                                            <div class="user-info">
-                                                <div class="user-img">
-                                                    <img src="~/assets/images/testimonial/user/1.png" alt="User Image">
-                                                </div>
-                                                <div class="user-content">
-                                                    <span class="user-name">Oscar Thomsen</span>
-                                                    <span class="user-occupation">Customer</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Add Arrows -->
-                            <div class="testimonial-button-next"></div>
-                            <div class="testimonial-button-prev"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Component.InvokeAsync("Contact")
         <!-- Banner Area End Here -->
         <!-- Begin Brand Area -->
         <div class="brand-area section-space-y-axis-100">
