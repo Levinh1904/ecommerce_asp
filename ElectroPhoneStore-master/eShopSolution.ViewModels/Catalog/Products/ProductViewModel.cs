@@ -1,4 +1,5 @@
 ﻿using eShopSolution.ViewModels.Catalog.Categories;
+using eShopSolution.ViewModels.Catalog.Producers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public int Id { set; get; }
         public decimal Price { set; get; }
         public int CategoryId { set; get; }
+        public int ProducerId { set; get; }
         public int Stock { set; get; }
         public DateTime DateCreated { get; set; }
         public string Name { set; get; }
@@ -20,6 +22,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public int Rating { get; set; }
         public string Review { get; set; }
         public CategoryViewModel Category { get; set; }
+        public ProducerViewModel Producer { get; set; }
         public List<ReviewViewModel> Reviews { get; set; }
     }
 }

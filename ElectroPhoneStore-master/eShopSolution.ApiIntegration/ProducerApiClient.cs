@@ -32,7 +32,38 @@ namespace eShopSolution.ApiIntegration
             _httpClientFactory = httpClientFactory;
         }
 
+
         public async Task<bool> CreateProducer(ProducerCreateRequest request)
+        {
+            var sessions = _httpContextAccessor
+                .HttpContext
+                .Session
+                .GetString(SystemConstants.AppSettings.Token);
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            if (request.Image != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(request.Image.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)request.Image.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "image", request.Image.FileName);
+            }
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
+          
+
+            var response = await client.PostAsync($"/api/producers/", requestContent);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdateProducer(ProducerUpdateRequest request)
         {
             var sessions = _httpContextAccessor
                 .HttpContext
@@ -55,39 +86,9 @@ namespace eShopSolution.ApiIntegration
                 ByteArrayContent bytes = new ByteArrayContent(data);
                 requestContent.Add(bytes, "thumbnailImage", request.Image.FileName);
             }
-           
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
-
-            var response = await client.PostAsync($"/api/producers/", requestContent);
-            return response.IsSuccessStatusCode;
-        }
-
-            public async Task<bool> UpdateProducer(ProducerUpdateRequest request)
-        {
-            var sessions = _httpContextAccessor
-                 .HttpContext
-                 .Session
-                 .GetString(SystemConstants.AppSettings.Token);
-
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-
-            var requestContent = new MultipartFormDataContent();
-
-            if (request.Image != null)
-            {
-                byte[] data;
-                using (var br = new BinaryReader(request.Image.OpenReadStream()))
-                {
-                    data = br.ReadBytes((int)request.Image.OpenReadStream().Length);
-                }
-                ByteArrayContent bytes = new ByteArrayContent(data);
-                requestContent.Add(bytes, "thumbnailImage", request.Image.FileName);
-            }
-
             
-            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
+
             var response = await client.PutAsync($"/api/producers/" + request.Id, requestContent);
             return response.IsSuccessStatusCode;
         }
@@ -96,7 +97,15 @@ namespace eShopSolution.ApiIntegration
         {
             return await Delete($"/api/producers/" + id);
         }
+        public async Task<List<ProducerViewModel>> GetAll()
+        {
+            return await GetListAsync<ProducerViewModel>("/api/producers");
+        }
 
+        public async Task<ProducerViewModel> GetById(int id)
+        {
+            return await GetAsync<ProducerViewModel>($"/api/producers/{id}");
+        }
         public async Task<PagedResult<ProducerViewModel>> GetAllPaging(GetManageProductPagingRequest request)
         {
             var data = await GetAsync<PagedResult<ProducerViewModel>>(
@@ -107,15 +116,6 @@ namespace eShopSolution.ApiIntegration
             return data;
         }
 
-        public async Task<List<ProducerViewModel>> GetAll()
-        {
-            return await GetListAsync<ProducerViewModel>("/api/producers");
-        }
-
-        public async Task<ProducerViewModel> GetById(int id)
-        {
-            return await GetAsync<ProducerViewModel>($"/api/producers/{id}");
-        }
     }
 }
 

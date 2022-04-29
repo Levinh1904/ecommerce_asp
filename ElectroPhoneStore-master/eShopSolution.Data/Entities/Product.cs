@@ -9,6 +9,7 @@ namespace eShopSolution.Data.Entities
         public int Id { get; set; }
         public string Name { set; get; }
         public int CategoryId { get; set; }
+        public int ProducerId { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public DateTime DateCreated { get; set; }

@@ -97,6 +97,7 @@ namespace eShopSolution.WebApp
             services.AddTransient<IContactApiClient, ContactApiClient>();
             services.AddTransient<IBlogApiClient, BlogApiClient>();
             services.AddTransient<ISlideApiClient, SlideApiClient>();
+            services.AddTransient<IProducerApiClient, ProducerApiClient>();
 
             services.AddMarkdown();
 

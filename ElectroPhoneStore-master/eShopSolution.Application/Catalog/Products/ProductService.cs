@@ -42,6 +42,7 @@ namespace eShopSolution.Application.Catalog.Products
                 // id tự tăng
                 Name = request.Name,
                 CategoryId = request.CategoryId,
+                ProducerId = request.ProducerId,
                 Price = request.Price,
                 Stock = request.Stock,
                 Description = request.Description,

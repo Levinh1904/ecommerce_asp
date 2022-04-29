@@ -1,4 +1,5 @@
 ﻿using eShopSolution.ViewModels.Catalog.Categories;
+using eShopSolution.ViewModels.Catalog.Producers;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
     public class ProductDetailViewModel
     {
         public CategoryViewModel Category { get; set; }
-
+        public ProducerViewModel Producer { get; set; }
         public ProductViewModel Product { get; set; }
 
         //public List<ReviewViewModel> Reviews { get; set; }

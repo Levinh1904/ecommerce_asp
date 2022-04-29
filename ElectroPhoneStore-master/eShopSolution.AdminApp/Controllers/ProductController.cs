@@ -18,14 +18,17 @@ namespace eShopSolution.AdminApp.Controllers
         private readonly IConfiguration _configuration;
 
         private readonly ICategoryApiClient _categoryApiClient;
+        private readonly IProducerApiClient _producerApiClient;
 
         public ProductController(IProductApiClient productApiClient,
             IConfiguration configuration,
-            ICategoryApiClient categoryApiClient)
+            ICategoryApiClient categoryApiClient,IProducerApiClient producerApiClient)
+
         {
             _configuration = configuration;
             _productApiClient = productApiClient;
             _categoryApiClient = categoryApiClient;
+            _producerApiClient = producerApiClient;
         }
 
         public async Task<IActionResult> Index(string keyword, int? categoryId, int pageIndex = 1, int pageSize = 4)
@@ -61,8 +64,10 @@ namespace eShopSolution.AdminApp.Controllers
         {
             // Lấy ra danh sách các category
             var categories = await _categoryApiClient.GetAll();
+            var producers = await _producerApiClient.GetAll();
             var productVM = new ProductCreateRequest()
             {
+                Producers = producers,
                 Categories = categories
             };
             return View(productVM);
@@ -78,7 +83,12 @@ namespace eShopSolution.AdminApp.Controllers
                 request.Categories = await _categoryApiClient.GetAll();
                 return View(request);
             }
-
+            if (!ModelState.IsValid)
+            {
+                request.ProducerId = 0;
+                request.Producers = await _producerApiClient.GetAll();
+                return View(request);
+            }
             var result = await _productApiClient.CreateProduct(request);
             if (result)
             {
@@ -89,6 +99,8 @@ namespace eShopSolution.AdminApp.Controllers
             ModelState.AddModelError("", "Thêm sản phẩm thất bại");
             request.CategoryId = 0;
             request.Categories = await _categoryApiClient.GetAll();
+            request.ProducerId = 0;
+            request.Producers = await _producerApiClient.GetAll();
             return View(request);
         }
 
@@ -122,7 +134,12 @@ namespace eShopSolution.AdminApp.Controllers
                 request.Categories = await _categoryApiClient.GetAll();
                 return View(request);
             }
-
+            if (!ModelState.IsValid)
+            {
+                request.ProducerId = 0;
+                request.Producers = await _producerApiClient.GetAll();
+                return View(request);
+            }
             var result = await _productApiClient.UpdateProduct(request);
             if (result)
             {
@@ -133,6 +150,8 @@ namespace eShopSolution.AdminApp.Controllers
             ModelState.AddModelError("", "Cập nhật sản phẩm thất bại");
             request.CategoryId = 0;
             request.Categories = await _categoryApiClient.GetAll();
+            request.ProducerId = 0;
+            request.Producers = await _producerApiClient.GetAll();
             return View(request);
         }
 
@@ -168,6 +187,7 @@ namespace eShopSolution.AdminApp.Controllers
             var product = await _productApiClient.GetById(id);
 
             var category = await _categoryApiClient.GetById(product.CategoryId);
+            var producer = await _producerApiClient.GetById(product.ProducerId);
 
             var detailVm = new ProductViewModel()
             {
@@ -175,6 +195,7 @@ namespace eShopSolution.AdminApp.Controllers
                 Stock = product.Stock,
                 Name = product.Name,
                 Category = category,
+                Producer = producer,
                 Description = product.Description,
                 Details = product.Details,
                 ThumbnailImage = product.ThumbnailImage,

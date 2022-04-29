@@ -10,16 +10,15 @@ namespace eShopSolution.ApiIntegration
 {
     public interface IProducerApiClient
     {
-        Task<PagedResult<ProducerViewModel>> GetAllPaging(GetManageProductPagingRequest request);
-
-        Task<List<ProducerViewModel>> GetAll();
-
-        Task<ProducerViewModel> GetById(int id);
-
         Task<bool> CreateProducer(ProducerCreateRequest request);
 
         Task<bool> UpdateProducer(ProducerUpdateRequest request);
 
         Task<bool> DeleteProducer(int id);
+
+        Task<ProducerViewModel> GetById(int id);
+
+        Task<List<ProducerViewModel>> GetAll();
+        Task<PagedResult<ProducerViewModel>> GetAllPaging(GetManageProductPagingRequest request);
     }
 }

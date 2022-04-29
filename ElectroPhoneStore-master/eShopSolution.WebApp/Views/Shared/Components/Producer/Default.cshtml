@@ -1,0 +1,26 @@
+﻿@using eShopSolution.ViewModels.Catalog.Producers
+@model List<ProducerViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+<div class="brand-area section-space-y-axis-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="swiper-container brand-slider">
+                    <div class="swiper-wrapper">
+
+                        @foreach (var producer in Model)
+                        {
+                            <div class="swiper-slide">
+                                <a class="brand-item" href="javascript:void(0)">
+                                    <img src="@(Configuration["BaseAddress"] + producer.Image)" alt="Brand Image">
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
