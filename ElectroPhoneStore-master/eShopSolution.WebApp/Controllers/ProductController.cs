@@ -48,10 +48,12 @@ namespace eShopSolution.WebApp.Controllers
             }
 
             var category = await _categoryApiClient.GetById(product.CategoryId);
+            var producer = await _producerApiClient.GetById(product.ProducerId);
 
             var productDetailViewModel = new ProductDetailViewModel()
             {
                 Category = category,
+                Producer = producer,
                 Product = product,
                 ListOfReviews = reviews
             };

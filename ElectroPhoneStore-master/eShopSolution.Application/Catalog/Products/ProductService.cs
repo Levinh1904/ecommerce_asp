@@ -220,7 +220,9 @@ namespace eShopSolution.Application.Catalog.Products
             var categories = await (from c in _context.Categories
                                     join p in _context.Products on c.Id equals p.CategoryId
                                     select p.Name).ToListAsync();
-
+            var producers = await (from c in _context.Producers
+                                    join p in _context.Products on c.Id equals p.ProducerId
+                                    select p.Name).ToListAsync();
             var product = await _context.Products.FindAsync(productId);
 
             // Lấy danh sách review
@@ -250,6 +252,7 @@ namespace eShopSolution.Application.Catalog.Products
                 Id = product.Id,
                 Name = product.Name != null ? product.Name : null,
                 CategoryId = product.CategoryId != 0 ? product.CategoryId : 0,
+                ProducerId = product.ProducerId != 0 ? product.ProducerId : 0,
                 //Category = category,
                 Description = product.Description != null ? product.Description : null,
                 Details = product.Details != null ? product.Details : null,
