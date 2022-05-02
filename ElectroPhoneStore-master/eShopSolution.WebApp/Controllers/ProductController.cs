@@ -15,12 +15,14 @@ namespace eShopSolution.WebApp.Controllers
         private readonly IProductApiClient _productApiClient;
         private readonly ICategoryApiClient _categoryApiClient;
         private readonly IUserApiClient _userApiClient;
+        private readonly IProducerApiClient _producerApiClient;
 
-        public ProductController(IProductApiClient productApiClient, ICategoryApiClient categoryApiClient, IUserApiClient userApiClient)
+        public ProductController(IProductApiClient productApiClient, IProducerApiClient producerApiClient, ICategoryApiClient categoryApiClient, IUserApiClient userApiClient)
         {
             _productApiClient = productApiClient;
             _categoryApiClient = categoryApiClient;
             _userApiClient = userApiClient;
+            _producerApiClient = producerApiClient;
         }
 
         public async Task<IActionResult> Detail(int id)
