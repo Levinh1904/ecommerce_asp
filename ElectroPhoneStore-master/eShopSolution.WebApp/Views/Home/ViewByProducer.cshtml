@@ -1,0 +1,101 @@
+﻿@using eShopSolution.ViewModels.Common;
+@model PagedResult<eShopSolution.ViewModels.Catalog.Products.ProductViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LazZiya.ExpressLocalization.ISharedCultureLocalizer _loc;
+@{
+    var culture = CultureInfo.CurrentCulture.Name;
+}
+@{
+    ViewData["Title"] = "ViewByProducer";
+    Layout = "~/Views/Shared/_Layoutms.cshtml";
+}
+<div class="product-area product-style-2 section-space-y-axis-100">
+    <div class="container">
+        <div class="section-title text-center pb-55">
+            <h2 class="title mb-0">Sản Phẩm</h2>
+        </div>
+        <div class="row">
+            <div class="col-main col-sm-12 col-xs-12">
+                <div class="shop-inner">
+
+                    @if (Model.Items.Count <= 0)
+                    {
+                        <p>Thương hiệu này hiện chưa có sản phẩm nào.</p>
+                    }
+                    else
+                    {
+                        <form asp-action="ViewByProducer" asp-controller="Home" method="get">
+                            <div class="toolbar column">
+                                <div class="sorter">
+                                    <label>Sắp xếp:</label>
+                                    <select name="sortOrder" onchange="this.form.submit()">
+                                        <option>Tất cả </option>
+                                        @foreach (var option in ViewBag.SortOption)
+                                        {
+                                            <option>@option</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        @foreach (var product in Model.Items)
+                        {
+                            var url = $"/{culture}/{_loc["productUrl"]}/{product.Id}";
+                            <div class="product-grid-area">
+                                <ul class="products-grid">
+                                    <li class="item col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                        <div class="product-item">
+                                            <div class="item-inner">
+                                                <div class="product-thumbnail">
+                                                    @if (product.Stock <= 0)
+                                                    {
+                                                        <div class="icon-new-label new-right">Hết hàng</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="icon-hot-label new-right">Mới</div>
+                                                    }
+
+                                                    <div class="pr-img-area">
+                                                        <a title="@product.Name" href="@url">
+                                                            <figure> <img class="first-img" src="@(Configuration["BaseAddress"] + product.ThumbnailImage)" alt="HTML template"> <img class="hover-img" src="@(Configuration["BaseAddress"] + product.ProductImage)" alt="HTML template"></figure>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="item-info">
+                                                    <div class="info-inner">
+                                                        <div class="item-title"> <a title="@product.Name" href="@url">@product.Name </a> </div>
+                                                        <div class="item-content">
+                                                            <div class="item-price">
+                                                                <div class="price-box"> <span class="regular-price"> <span class="price">@product.Price.ToString("N0") <span>&#8363;</span></span> </span> </div>
+                                                            </div>
+                                                            @if (product.Stock <= 0)
+                                                            {
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="pro-action" style="background-color: rgb(186, 195, 78);">
+                                                                    <button style="background-color: rgb(186, 195, 78); font-family: 'FontAwesome';" type="button" class="add-to-cart add-to-cart-btn" data-id="@product.Id"><span style="font-size:17px"> Thêm vào giỏ hàng</span> </button>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        }
+                        <div class="pagination-area ">
+                            @await Component.InvokeAsync("Pager", Model)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

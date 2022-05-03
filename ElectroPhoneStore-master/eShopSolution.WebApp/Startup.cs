@@ -152,7 +152,13 @@ namespace eShopSolution.WebApp
                         controller = "Product",
                         action = "Category"
                     });
-
+                endpoints.MapControllerRoute(
+                   name: "Product Producer En",
+                   pattern: "{culture}/producers/{id}", new
+                   {
+                       controller = "Product",
+                       action = "Producer"
+                   });
                 endpoints.MapControllerRoute(
                   name: "Product Category Vn",
                   pattern: "{culture}/danh-muc/{id}", new
@@ -160,7 +166,13 @@ namespace eShopSolution.WebApp
                       controller = "Product",
                       action = "Category"
                   });
-
+                endpoints.MapControllerRoute(
+                  name: "Product Producer Vn",
+                  pattern: "{culture}/thuong-hieu/{id}", new
+                  {
+                      controller = "Product",
+                      action = "Producer"
+                  });
                 endpoints.MapControllerRoute(
                     name: "Product Detail En",
                     pattern: "{culture}/products/{id}", new
@@ -174,6 +186,13 @@ namespace eShopSolution.WebApp
                     {
                         controller = "Blog",
                         action = "Details"
+                    });
+                endpoints.MapControllerRoute(
+                    name: "Producer Detail En",
+                    pattern: "{culture}/producerUrl/{id}", new
+                    {
+                        controller = "Home",
+                        action = "ViewByProducer"
                     });
                 endpoints.MapControllerRoute(
                   name: "Product Detail Vn",

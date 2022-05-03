@@ -102,5 +102,19 @@ namespace eShopSolution.WebApp.Controllers
                 Products = products
             });
         }
+        public async Task<IActionResult> Producer(int id, string culture, int page = 1)
+        {
+            var products = await _productApiClient.GetPagings(new GetManageProductPagingRequest()
+            {
+                CategoryId = id,
+                PageIndex = page,
+                PageSize = 10
+            });
+            return View(new ProductProducerViewModel()
+            {
+                Producer = await _producerApiClient.GetById(id),
+                Products = products
+            });
+        }
     }
 }
