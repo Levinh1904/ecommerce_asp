@@ -106,6 +106,10 @@ namespace eShopSolution.ApiIntegration
         {
             return await GetAsync<ProducerViewModel>($"/api/producers/{id}");
         }
+        public async Task<ProducerViewModel> GetMen(int id)
+        {
+            return await GetAsync<ProducerViewModel>($"/api/producers/{2}");
+        }
         public async Task<PagedResult<ProducerViewModel>> GetAllPaging(GetManageProductPagingRequest request)
         {
             var data = await GetAsync<PagedResult<ProducerViewModel>>(

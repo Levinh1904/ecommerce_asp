@@ -17,7 +17,7 @@ namespace eShopSolution.ApiIntegration
         Task<bool> DeleteProducer(int id);
 
         Task<ProducerViewModel> GetById(int id);
-
+        Task<ProducerViewModel> GetMen(int id);
         Task<List<ProducerViewModel>> GetAll();
         Task<PagedResult<ProducerViewModel>> GetAllPaging(GetManageProductPagingRequest request);
     }

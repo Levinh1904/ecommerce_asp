@@ -1,4 +1,4 @@
-﻿using eShopSolution.ViewModels.Utilities.Enums;
+﻿
 using System;
 using System.Collections.Generic;
 

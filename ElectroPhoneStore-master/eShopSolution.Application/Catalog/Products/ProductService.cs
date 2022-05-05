@@ -344,7 +344,7 @@ namespace eShopSolution.Application.Catalog.Products
         {
             //1. Select join
             var query = from p in _context.Products
-                        join c in _context.Categories on p.CategoryId equals c.Id
+                        join c in _context.Producers on p.ProducerId equals c.Id
                         select new { p };
 
             var data = await query.OrderByDescending(x => x.p.DateCreated).Take(take)
@@ -353,6 +353,7 @@ namespace eShopSolution.Application.Catalog.Products
                     Id = x.p.Id,
                     Name = x.p.Name,
                     CategoryId = x.p.CategoryId,
+                    ProducerId = x.p.ProducerId,
                     DateCreated = x.p.DateCreated,
                     Description = x.p.Description,
                     Details = x.p.Details,

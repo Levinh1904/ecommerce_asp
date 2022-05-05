@@ -41,6 +41,7 @@ namespace eShopSolution.Data.EF
             modelBuilder.ApplyConfiguration(new ProducerConfiguration());
             modelBuilder.ApplyConfiguration(new ContactConfiguration());
             modelBuilder.ApplyConfiguration(new BlogConfiguration());
+            modelBuilder.ApplyConfiguration(new ReplyChatConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
 
@@ -72,5 +73,6 @@ namespace eShopSolution.Data.EF
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ReplyChat> ReplyChats { get; set; }
     }
 }

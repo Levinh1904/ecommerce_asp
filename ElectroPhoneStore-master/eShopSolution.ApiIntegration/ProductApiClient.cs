@@ -155,13 +155,18 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
+        public async Task<ProductViewModel> GetMen(int producerID)
+        {
+            var data = await GetAsync<ProductViewModel>($"/api/products/{producerID}");
 
+            return data;
+        }
         public async Task<List<ProductViewModel>> GetFeaturedProducts(string languageId, int take)
         {
             var data = await GetListAsync<ProductViewModel>($"/api/products/featured/{take}");
             return data;
         }
-
+   
         public async Task<List<ProductViewModel>> GetLatestProducts(string languageId, int take)
         {
             var data = await GetListAsync<ProductViewModel>($"/api/products/latest/{take}");

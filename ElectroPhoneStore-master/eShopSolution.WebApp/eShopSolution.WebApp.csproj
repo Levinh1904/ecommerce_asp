@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EmailService\EmailService.csproj" />
     <ProjectReference Include="..\eShopSolution.ApiIntegration\eShopSolution.ApiIntegration.csproj" />
+    <ProjectReference Include="..\eShopSolution.Data\eShopSolution.Data.csproj" />
   </ItemGroup>
 
 </Project>

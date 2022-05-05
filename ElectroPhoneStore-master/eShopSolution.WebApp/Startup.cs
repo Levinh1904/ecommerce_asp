@@ -1,4 +1,5 @@
 using eShopSolution.ApiIntegration;
+using eShopSolution.Data.EF;
 using eShopSolution.ViewModels.System.Users;
 using eShopSolution.WebApp.Data;
 using eShopSolution.WebApp.LocalizationResources;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -106,7 +108,7 @@ namespace eShopSolution.WebApp
                 .AddApplicationPart(typeof(MarkdownPageProcessorMiddleware).Assembly);
 
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
-
+            services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
