@@ -18,6 +18,10 @@ using System.Net.Http;
 using System.Text;
 using Stripe.Checkout;
 using PaymentMethod = eShopSolution.ViewModels.Utilities.Enums.PaymentMethod;
+using Microsoft.Extensions.Configuration;
+using PayPal.Core;
+using PayPal.v1.Payments;
+using BraintreeHttp;
 
 namespace eShopSolution.WebApp.Controllers
 {
@@ -27,13 +31,17 @@ namespace eShopSolution.WebApp.Controllers
         private readonly IOrderApiClient _orderApiClient;
         private readonly IUserApiClient _userApiClient;
         private readonly ICouponApiClient _couponApiClient;
-
-        public CartController(IProductApiClient productApiClient, IOrderApiClient orderApiClient, IUserApiClient userApiClient, ICouponApiClient couponApiClient)
+        private readonly string _clientId;
+        private readonly string _secretKey;
+        public double TyGiaUSD = 23300;//store in Database
+        public CartController(IProductApiClient productApiClient, IOrderApiClient orderApiClient, IUserApiClient userApiClient, ICouponApiClient couponApiClient, IConfiguration config)
         {
             _productApiClient = productApiClient;
             _orderApiClient = orderApiClient;
             _userApiClient = userApiClient;
             _couponApiClient = couponApiClient;
+            _clientId = config["PaypalSettings:ClientId"];
+            _secretKey = config["PaypalSettings:SecretKey"];
         }
 
         public IActionResult Index()
@@ -584,5 +592,131 @@ namespace eShopSolution.WebApp.Controllers
 
             return Ok(currentCart);
         }
+        [Authorize]
+        public async System.Threading.Tasks.Task<IActionResult> PaypalCheckout()
+        {
+            var environment = new SandboxEnvironment(_clientId, _secretKey);
+            var client = new PayPalHttpClient(environment);
+            
+            #region Create Paypal Order
+            var itemList = new ItemList()
+            {
+                Items = new List<Item>()
+            };
+
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0f;
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+            var total = price;
+            foreach (var item in currentCart.CartItems)
+            {
+                itemList.Items.Add(new Item()
+                {
+                    Name = item.Name,
+                    Currency = "USD",
+                    Price = Math.Round((double)item.Price / TyGiaUSD, 2).ToString(),
+                    Quantity = item.Quantity.ToString(),
+                    Sku = "sku",
+                    Tax = "0"
+                });
+            }
+            #endregion
+
+            var paypalOrderId = DateTime.Now.Ticks;
+            var hostname = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            var payment = new Payment()
+            {
+                Intent = "sale",
+                Transactions = new List<Transaction>()
+                {
+                    new Transaction()
+                    {
+                        Amount = new Amount()
+                        {
+                            Total = total.ToString(),
+                            Currency = "USD",
+                            Details = new AmountDetails
+                            {
+                                Tax = "0",
+                                Shipping = "0",
+                                Subtotal = total.ToString()
+                            }
+                        },
+                        ItemList = itemList,
+                        Description = $"Invoice #{paypalOrderId}",
+                        InvoiceNumber = paypalOrderId.ToString()
+                    }
+                },
+                RedirectUrls = new RedirectUrls()
+                {
+                    CancelUrl = $"{hostname}/vi/Cart/CheckoutFail",
+                    ReturnUrl = $"{hostname}/vi/Cart/CheckoutSuccess"
+                },
+                Payer = new Payer()
+                {
+                    PaymentMethod = "paypal"
+                }
+            };
+
+            PaymentCreateRequest request = new PaymentCreateRequest();
+            request.RequestBody(payment);
+
+            try
+            {
+                var response = await client.Execute(request);
+                var statusCode = response.StatusCode;
+                Payment result = response.Result<Payment>();
+
+                var links = result.Links.GetEnumerator();
+                string paypalRedirectUrl = null;
+                while (links.MoveNext())
+                {
+                    LinkDescriptionObject lnk = links.Current;
+                    if (lnk.Rel.ToLower().Trim().Equals("approval_url"))
+                    {
+                        //saving the payapalredirect URL to which user will be redirected for payment  
+                        paypalRedirectUrl = lnk.Href;
+                    }
+                }
+
+                return Redirect(paypalRedirectUrl);
+            }
+            catch (HttpException httpException)
+            {
+                var statusCode = httpException.StatusCode;
+                var debugId = httpException.Headers.GetValues("PayPal-Debug-Id").FirstOrDefault();
+
+                //Process when Checkout with Paypal fails
+                return Redirect("/vi/Cart/CheckoutFail");
+            }
+        }
+
+        public IActionResult CheckoutFail()
+        {
+            //Tạo đơn hàng trong database với trạng thái thanh toán là "Chưa thanh toán"
+            //Xóa session
+            return View();
+        }
+
+        public IActionResult CheckoutSuccess()
+        {
+            //Tạo đơn hàng trong database với trạng thái thanh toán là "Paypal" và thành công
+            //Xóa session
+            return View();
+        }
+
     }
 }
