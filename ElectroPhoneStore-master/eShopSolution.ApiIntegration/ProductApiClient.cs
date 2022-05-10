@@ -155,6 +155,12 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
+        public async Task<ProductViewModel> GetAll()
+        {
+            var data = await GetAsync<ProductViewModel>($"/api/products");
+
+            return data;
+        }
         public async Task<ProductViewModel> GetMen(int producerID)
         {
             var data = await GetAsync<ProductViewModel>($"/api/products/{producerID}");

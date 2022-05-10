@@ -102,7 +102,22 @@ namespace eShopSolution.WebApp.Controllers
 
             return View(viewModel);
         }
-
+        public async Task<IActionResult> GetProduct(string keyword, int pageIndex = 1, int pageSize = 6)
+        {
+            var request = new GetManageProductPagingRequest()
+            {
+                Keyword = keyword,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+            };
+            var culture = CultureInfo.CurrentCulture.Name;
+            var data = await _productApiClient.GetFeaturedProducts(culture, SystemConstants.ProductSettings.NumberOfFeturedProducts);
+            if (TempData["result"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["result"];
+            }
+            return View(data);
+        }
         [HttpGet]
         public async Task<IActionResult> ViewByCategory(string sortOrder, int cateId, int pageIndex = 1, int pageSize = 8)
         {
@@ -135,13 +150,13 @@ namespace eShopSolution.WebApp.Controllers
             return View(data);
         }
         [HttpGet]
-        public async Task<IActionResult> ViewByProducer(string sortOrder, int cateId, int pageIndex = 1, int pageSize = 8)
+        public async Task<IActionResult> ViewByProducer(string sortOrder, int id, int pageIndex = 1, int pageSize = 8)
         {
             var request = new GetManageProductPagingRequest()
             {
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                ProducerId = cateId,
+                ProducerId = id,
                 SortOption = sortOrder
             };
 

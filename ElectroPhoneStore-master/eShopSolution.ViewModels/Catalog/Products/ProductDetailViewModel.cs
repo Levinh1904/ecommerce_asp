@@ -23,8 +23,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
         // Use to get user id when add review
         public string UserCommentId { get; set; }
 
-        public List<ProductViewModel> RelatedProducts { get; set; }
-
+        public List<ViewModels.Catalog.Products.ProductViewModel> FeaturedProducts { get; set; }
         public List<ProductImageViewModel> ProductImages { get; set; }
     }
 }

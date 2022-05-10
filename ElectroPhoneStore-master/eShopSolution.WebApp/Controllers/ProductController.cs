@@ -57,7 +57,6 @@ namespace eShopSolution.WebApp.Controllers
                 Product = product,
                 ListOfReviews = reviews
             };
-
             // get user review name
             foreach (var review in productDetailViewModel.ListOfReviews)
             {

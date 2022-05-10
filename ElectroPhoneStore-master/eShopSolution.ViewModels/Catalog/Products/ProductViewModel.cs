@@ -24,5 +24,6 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public CategoryViewModel Category { get; set; }
         public ProducerViewModel Producer { get; set; }
         public List<ReviewViewModel> Reviews { get; set; }
+        public List<ViewModels.Catalog.Products.ProductViewModel> FeaturedProducts { get; set; }
     }
 }

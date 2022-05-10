@@ -847,7 +847,7 @@
                 </div>
                 <div class="row">
                     <div class="col-main col-sm-12 col-xs-12">
-                        <div class="shop-inner">
+                        <div class="shop-inner row" >
 
                             @if (Model.Items.Count <= 0)
                             {
@@ -872,9 +872,9 @@
                                 @foreach (var product in Model.Items)
                                 {
                                     var url = $"/{culture}/{_loc["productUrl"]}/{product.Id}";
-                                    <div class="product-grid-area">
+                                    <div style="padding-right: 30px;" class="product-grid-area col-lg-3 col-md-4 col-sm-6 col-xs-6">
                                         <ul class="products-grid">
-                                            <li class="item col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                            <li class="item ">
                                                 <div class="product-item">
                                                     <div class="item-inner">
                                                         <div class="product-thumbnail">
