@@ -26,7 +26,7 @@ namespace eShopSolution.Application.Catalog.Products
         Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request);
 
         Task<PagedResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request);
-
+        Task<PagedResult<ProductViewModel>> GetAllByProducerId(GetPublicProductPagingRequest request);
         Task<List<ProductViewModel>> GetFeaturedProducts(int take);
 
         Task<List<ProductViewModel>> GetLatestProducts(int take);

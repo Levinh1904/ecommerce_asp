@@ -148,7 +148,15 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
+        public async Task<PagedResult<ProductViewModel>> GetAllByProducerPaging(GetPublicProductPagingRequest request)
+        {
+            var data = await GetAsync<PagedResult<ProductViewModel>>(
+                   $"/api/products/paging?pageIndex={request.PageIndex}" +
+                   $"&pageSize={request.PageSize}" +
+                   $"&producerId={request.ProducerId}");
 
+            return data;
+        }
         public async Task<ProductViewModel> GetById(int id)
         {
             var data = await GetAsync<ProductViewModel>($"/api/products/{id}");
