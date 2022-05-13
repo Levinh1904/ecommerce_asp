@@ -22,6 +22,8 @@ using Microsoft.Extensions.Configuration;
 using PayPal.Core;
 using PayPal.v1.Payments;
 using BraintreeHttp;
+using eShopSolution.WebApp.Others;
+using Newtonsoft.Json.Linq;
 
 namespace eShopSolution.WebApp.Controllers
 {
@@ -872,5 +874,91 @@ namespace eShopSolution.WebApp.Controllers
             return View(request);
         }
 
+        public ActionResult MomoCheckout()
+        {
+            //request params need to request to MoMo system
+            string endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+            string partnerCode = "MOMO2L2Y20220513";
+            string accessKey = "p1AilmB8a6WMyO2g";
+            string serectkey = "cjcdWBmBeWBvAsEKJAg8hOlLnax7RBoa";
+            string orderInfo = "Thanh toán MoMo";
+            string returnUrl = "https://localhost:5003/vi/Cart/ConfirmPaymentClient";
+            string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0f;
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+            string amount = price.ToString();
+            string orderid = DateTime.Now.Ticks.ToString();
+            string requestId = DateTime.Now.Ticks.ToString();
+            string extraData = "";
+
+            //Before sign HMAC SHA256 signature
+            string rawHash = "partnerCode=" +
+                partnerCode + "&accessKey=" +
+                accessKey + "&requestId=" +
+                requestId + "&amount=" +
+                amount + "&orderId=" +
+                orderid + "&orderInfo=" +
+                orderInfo + "&returnUrl=" +
+                returnUrl + "&notifyUrl=" +
+                notifyurl + "&extraData=" +
+                extraData;
+
+            MoMoSecurity crypto = new MoMoSecurity();
+            //sign signature SHA256
+            string signature = crypto.signSHA256(rawHash, serectkey);
+
+            //build body json request
+            JObject message = new JObject
+            {
+                { "partnerCode", partnerCode },
+                { "accessKey", accessKey },
+                { "requestId", requestId },
+                { "amount", amount },
+                { "orderId", orderid },
+                { "orderInfo", orderInfo },
+                { "returnUrl", returnUrl },
+                { "notifyUrl", notifyurl },
+                { "extraData", extraData },
+                { "requestType", "captureMoMoWallet" },
+                { "signature", signature }
+
+            };
+
+            string responseFromMomo = PaymentRequest.sendPaymentRequest(endpoint, message.ToString());
+
+            JObject jmessage = JObject.Parse(responseFromMomo);
+
+            return Redirect(jmessage.GetValue("payUrl").ToString());
+        }
+
+        //Khi thanh toán xong ở cổng thanh toán Momo, Momo sẽ trả về một số thông tin, trong đó có errorCode để check thông tin thanh toán
+        //errorCode = 0 : thanh toán thành công (Request.QueryString["errorCode"])
+        //Tham khảo bảng mã lỗi tại: https://developers.momo.vn/#/docs/aio/?id=b%e1%ba%a3ng-m%c3%a3-l%e1%bb%97i
+        public ActionResult ConfirmPaymentClient()
+        {
+            //hiển thị thông báo cho người dùng
+            return View();
+        }
+
+        [HttpPost]
+        public void SavePayment()
+        {
+            //cập nhật dữ liệu vào db
+        }
     }
+
 }
