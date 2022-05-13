@@ -108,6 +108,7 @@ namespace eShopSolution.AdminApp.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var categories = await _categoryApiClient.GetAll();
+            var producers = await _producerApiClient.GetAll();
             var product = await _productApiClient.GetById(id);
             var editVm = new ProductUpdateRequest()
             {
@@ -115,6 +116,8 @@ namespace eShopSolution.AdminApp.Controllers
                 Name = product.Name,
                 CategoryId = product.CategoryId,
                 Categories = categories,
+                ProducerId = product.ProducerId,
+                Producers = producers,
                 Price = product.Price,
                 Stock = product.Stock,
                 Description = product.Description,

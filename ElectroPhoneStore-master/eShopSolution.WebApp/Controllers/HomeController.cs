@@ -150,13 +150,13 @@ namespace eShopSolution.WebApp.Controllers
             return View(data);
         }
         [HttpGet]
-        public async Task<IActionResult> ViewByProducer(string sortOrder, int id, int pageIndex = 1, int pageSize = 8)
+        public async Task<IActionResult> ViewByProducer(string sortOrder, int cateId, int pageIndex = 1, int pageSize = 8)
         {
             var request = new GetManageProductPagingRequest()
             {
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                ProducerId = id,
+                ProducerId = cateId,
                 SortOption = sortOrder
             };
 

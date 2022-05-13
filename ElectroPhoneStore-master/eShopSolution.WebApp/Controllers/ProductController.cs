@@ -105,7 +105,7 @@ namespace eShopSolution.WebApp.Controllers
         {
             var products = await _productApiClient.GetPagings(new GetManageProductPagingRequest()
             {
-                CategoryId = id,
+                ProducerId = id,
                 PageIndex = page,
                 PageSize = 10
             });

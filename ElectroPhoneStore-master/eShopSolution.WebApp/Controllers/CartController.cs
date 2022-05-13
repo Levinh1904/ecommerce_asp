@@ -126,9 +126,9 @@ namespace eShopSolution.WebApp.Controllers
             if (result != "Failed")
             {
                 // mail admin when have new email
-                //var emai1 = new EmailService.EmailService();
-                //emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
-                //"ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
+                var emai1 = new EmailService.EmailService();
+                emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                "ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
                         + "<thead>"
@@ -593,8 +593,8 @@ namespace eShopSolution.WebApp.Controllers
             return Ok(currentCart);
         }
         [Authorize]
-        public async System.Threading.Tasks.Task<IActionResult> PaypalCheckout()
-        {
+        public async Task<IActionResult> PaypalCheckout()
+         {
             var environment = new SandboxEnvironment(_clientId, _secretKey);
             var client = new PayPalHttpClient(environment);
             
@@ -711,11 +711,165 @@ namespace eShopSolution.WebApp.Controllers
             return View();
         }
 
-        public IActionResult CheckoutSuccess()
+        public async Task<IActionResult> CheckoutSuccess(CheckoutViewModel request)
         {
             //Tạo đơn hàng trong database với trạng thái thanh toán là "Paypal" và thành công
             //Xóa session
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0;
+
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+
+            // Tìm Guid của người mua để gán vào order
+            var claims = User.Claims.ToList();
+            var userId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var users = await _userApiClient.GetAll();
+            var x = users.FirstOrDefault(x => x.Id.ToString() == userId);
+
+            // Order detail là lấy từ session chứ không lấy qua CheckoutViewModel, vì model binding không có bind cái danh sách sản phẩm
+            var model = GetCheckoutViewModel();
+            var orderDetails = new List<OrderDetailViewModel>();
+
+            foreach (var item in model.CartItems)
+            {
+                orderDetails.Add(new OrderDetailViewModel()
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                });
+            }
+
+            var checkoutRequest = new CheckoutRequest()
+            {
+                UserID = x.Id,
+                Address = request.CheckoutModel.Address,
+                Name = request.CheckoutModel.Name,
+                PhoneNumber = request.CheckoutModel.PhoneNumber,
+                OrderDetails = orderDetails,
+                PaymentMethod = PaymentMethod.COD,
+                Total = price,
+            };
+
+            if (model.CouponCode != null)
+            {
+                var coupons = await _couponApiClient.GetAll();
+                var coupon = coupons.FirstOrDefault(x => x.Code == model.CouponCode);
+                checkoutRequest.CouponId = coupon.Id;
+            }
+
+            var result = await _orderApiClient.CreateOrder(checkoutRequest);
+
+            if (result != "Failed")
+            {
+                // mail admin when have new email
+                //var emai1 = new EmailService.EmailService();
+                //emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                //"ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
+
+                var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
+                        + "<thead>"
+                        + "<tr>"
+                        + "<th>Tên sản phẩm</th>"
+                        + "<th>Đơn giá</th>"
+                        + "<th>Số lượng mua</th>"
+                        + "<th>Tổng cộng</th>"
+                        + "</tr>"
+                        + "</thead>"
+                        + "<tbody>";
+                decimal total = 0;
+                decimal amount = 0;
+                // mail client when placed order successfully
+                foreach (var product in currentCart.CartItems)
+                {
+                    amount = product.Price * product.Quantity;
+                    orderSummaryHtml +=
+                        "<tr>"
+                        + "<td>" + product.Name + "</td>"
+                        + "<td>" + product.Price.ToString("N0") + " <span>&#8363;</span>" + "</td>"
+                        + "<td>" + product.Quantity
+                        + "</td>"
+                        + "<td>" + amount.ToString("N0") + " <span>&#8363;</span>" + "</td>"
+                        + "</tr>"
+                        + "</tbody>";
+
+                    total += amount;
+                };
+
+                if (currentCart.Promotion != 0)
+                {
+                    orderSummaryHtml +=
+                        "<tfoot>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng</strong></td>"
+                        + $"<td><strong> {sub_price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "<tr>"
+                        + "<td><strong>Số tiền giảm</strong></td>"
+                        + $"<td><strong> {sub_price - (sub_price * ((100f - model.Promotion) / 100f)):N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng đã giảm</strong></td>"
+                        + $"<td><strong> {price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "</tfoot>"
+                        + "</table>";
+                }
+                else
+                {
+                    orderSummaryHtml +=
+                        "<tfoot>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng</strong></td>"
+                        + $"<td><strong> {price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "</tfoot>"
+                        + "</table>";
+                }
+
+                var templateHtml = "<h1>Electro Phone Store</h1>" + "<br>"
+                            + $"<h2>Quý khách đã đặt hàng thành công ! Đơn hàng của quý khách sẽ được duyệt sớm"
+                            + "<br>"
+                            + $"Mã đơn là {result}"
+                            + "<br>"
+                            + "<h3>Danh sách sản phẩm đã đặt</h3>"
+                            + "<br>";
+
+                var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+                var email2 = new EmailService.EmailService();
+                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                                "ĐẶT HÀNG THÀNH CÔNG",
+                                templateHtml
+                                + orderSummaryHtml
+                                );
+
+                currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+                currentCart.CartItems.Clear();
+                currentCart.Promotion = 0;
+                HttpContext.Session.SetString(SystemConstants.CartSession, JsonConvert.SerializeObject(currentCart));
+                TempData["SuccessMsg"] = "Order purchased successful";
+                return View(request);
+            }
+
+            ModelState.AddModelError("", "Đặt hàng thất bại");
+            return View(request);
         }
 
     }
