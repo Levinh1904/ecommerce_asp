@@ -369,6 +369,7 @@ namespace eShopSolution.WebApp.Controllers
                         + "<th>Đơn giá</th>"
                         + "<th>Số lượng mua</th>"
                         + "<th>Tổng cộng</th>"
+                        + "<th>Trạng Thái</th>"
                         + "</tr>"
                         + "</thead>"
                         + "<tbody>";
@@ -385,6 +386,7 @@ namespace eShopSolution.WebApp.Controllers
                         + "<td>" + product.Quantity
                         + "</td>"
                         + "<td>" + amount.ToString("N0") + " <span>&#8363;</span>" + "</td>"
+                        + "<th>Đã thanh toán</th>"
                         + "</tr>"
                         + "</tbody>";
 
@@ -428,6 +430,7 @@ namespace eShopSolution.WebApp.Controllers
                             + $"Mã đơn là {result}"
                             + "<br>"
                             + "<h3>Danh sách sản phẩm đã đặt</h3>"
+                            + "<h3>Hình thức thanh toán: Thẻ Visa Card</h3>"
                             + "<br>";
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;

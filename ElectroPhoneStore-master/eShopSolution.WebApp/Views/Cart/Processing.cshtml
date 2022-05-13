@@ -20,7 +20,7 @@
         <p class="blockquote text-center" style="font-family: 'FontAwesome';">
             Chi tiết giao dịch  <br />
             Khách hàng : @ViewBag.Customer <br /> <br />
-            Amount : @ViewBag.AmountPaid.000 VNĐ
+            Amount : @ViewBag.AmountPaid.ToString("#,##0.###") VNĐ
         </p>
 
         @*@if (TempData.Peek("TotalAmount") != null)
