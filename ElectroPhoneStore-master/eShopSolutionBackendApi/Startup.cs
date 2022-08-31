@@ -32,6 +32,10 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using Newtonsoft.Json.Serialization;
 using eShopSolution.Application.Catalog.Coupons;
+using eShopSolution.Application.Catalog.Produ;
+using eShopSolution.Application.Catalog.Slides;
+using eShopSolution.Application.Catalog.Blogs;
+using eShopSolution.Application.Catalog.Contacts;
 
 namespace eShopSolutionBackendApi
 {
@@ -68,6 +72,10 @@ namespace eShopSolutionBackendApi
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<IProductService, eShopSolution.Application.Catalog.Products.ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IBlogService, BlogService>();
+            services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<IProducerService, ProducerService>();
+            services.AddTransient<ISlideService, SlideService>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

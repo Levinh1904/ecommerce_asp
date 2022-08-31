@@ -1,4 +1,5 @@
 ﻿using eShopSolution.ViewModels.Catalog.Categories;
+using eShopSolution.ViewModels.Catalog.Producers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -18,6 +19,8 @@ namespace eShopSolution.ViewModels.Catalog.Products
 
         [Display(Name = "Danh mục")]
         public int CategoryId { set; get; }
+        [Display(Name = "Thương Hiệu")]
+        public int ProducerId { set; get; }
 
         [Display(Name = "Giá tiền")]
         public decimal Price { get; set; }
@@ -38,5 +41,6 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public IFormFile ProductImage { get; set; }
 
         public List<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
+        public List<ProducerViewModel> Producers { get; set; } = new List<ProducerViewModel>();
     }
 }

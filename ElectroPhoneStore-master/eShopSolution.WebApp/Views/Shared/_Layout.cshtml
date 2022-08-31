@@ -8,7 +8,7 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Harmic - Home Two</title>
+    <title>Trang Chủ</title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,14 +30,6 @@
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <!--sweet aler 2-->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -57,22 +49,18 @@
                                     <ul class="dropdown-wrap text-matterhorn">
                                         @{ var claims = User.Claims.ToList();
                                             var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName).Value; }
-                                        <li><a href="#">Xin chào <strong>@name</strong></a></li>
+                                        <li style="font-family: 'FontAwesome';"><a href="#">Xin chào <strong>@name</strong></a></li>
                                     </ul> }
                                 else
                                 {
                                     <ul class="dropdown-wrap text-matterhorn">
-                                        <li><a href="#">Xin chào <strong>quý khách!</strong></a></li>
+                                        <li style="font-family: 'FontAwesome';"><a href="#">Xin chào <strong>quý khách!</strong></a></li>
                                     </ul>}
                             </div>
-                            <a href="/@culture/cart">
-                                <i class="pe-7s-shopbag"></i>
-                                <span class="quantity qty" id="lbl_number_of_items_header">0</span>
-                            </a>
                         </div>
                         <div class="col-6 ">
                             <div class="header-top-right text-matterhorn col-6 ">
-                                <p class="shipping mb-0">Free delivery on order over <span>$200</span></p>
+                                <p class="shipping mb-0"></p>
                             </div>
                         </div>
                     </div>
@@ -88,7 +76,7 @@
                                 </a>
                                 <div class="header-search-area d-none d-lg-block">
                                     <form asp-action="ViewBySearchProduct" asp-controller="Home" method="get" class="header-searchbox">
-                                        <input value="@ViewBag.Keyword" name="keyword" class="input-field input" type="text" placeholder="Search Products">
+                                        <input value="@ViewBag.Keyword" name="keyword" class="input-field input" type="text" placeholder="Tìm kiếm">
                                         <button class="btn btn-outline-whisper btn-primary-hover search-btn" type="submit"><i class="pe-7s-search"></i></button>
                                     </form>
                                 </div>
@@ -102,19 +90,19 @@
                                             {
 
                                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
-                                                    <li><a asp-action="Index" asp-controller="Account"><i class="fa fa-user-o"></i> Tài khoản</a></li>
-                                                    <li><button form="logout_form" id="logout-button" type="submit"><span id="logout_label">Đăng xuất</span></button></li>
+                                                    <li><a asp-action="Index" asp-controller="Account" style="margin-left: 10px;"><i class="fa fa-user-o"></i> Tài khoản</a></li>
+                                                    <li><button style="font-family: 'FontAwesome'; border: none; margin-left: 10px; background: antiquewhite; border-radius: 5px; margin-top: 10px;" form="logout_form" id="logout-button" type="submit"><span id="logout_label">Đăng xuất</span></button></li>
                                                 </ul>
                                                 <form id="logout_form" action="/@culture/Login/Logout" method="post">
                                                 </form> }
                                             else
                                             {
                                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
-                                                    <li><a asp-action="Login" asp-controller="Login"> Đăng nhập</a></li>
-                                                    <li><a asp-action="Register" asp-controller="Login"> Đăng ký</a></li>
+                                                    <li style="margin-left: 20px; font-family: 'Pe-icon-7-stroke';"><a asp-action="Login" asp-controller="Login"> Đăng nhập</a></li>
+                                                    <li style="margin-left: 20px; font-family: 'Pe-icon-7-stroke';"><a asp-action="Register" asp-controller="Login"> Đăng ký</a></li>
                                                 </ul>}
                                         </li>
-                                        
+
                                         <li class="">
                                             <a href="/@culture/cart" class=" ">
                                                 <i class="pe-7s-shopbag"></i>
@@ -155,45 +143,7 @@
         <!-- Main Header Area End Here -->
         <!-- Begin Slider Area -->
         <div class="slider-area">
-
-            <!-- Main Slider -->
-            <div class="swiper-container main-slider-2 swiper-arrow with-bg_white">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide animation-style-01">
-                        <div class="slide-inner bg-height" data-bg-image="~/assets/images/slider/bg/2-1.jpg">
-                            <div class="container">
-                                <div class="slide-content">
-                                    <h2 class="title font-weight-bold mb-4">Fresh Organic <br> Products</h2>
-                                    <p class="short-desc different-width mb-9">Best Offer Products 100% Naturan Healthy Food For Your Life</p>
-                                    <div class="button-wrap">
-                                        <a class="btn btn-custom-size lg-size btn-primary btn-white-hover rounded-0" href="shop.html">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide animation-style-01">
-                        <div class="slide-inner bg-height" data-bg-image="~/assets/images/slider/bg/2-2.jpg">
-                            <div class="container">
-                                <div class="slide-content">
-                                    <h2 class="title font-weight-bold mb-4">Fresh Organic <br> Products</h2>
-                                    <p class="short-desc different-width mb-9">Best Offer Products 100% Naturan Healthy Food For Your Life</p>
-                                    <div class="button-wrap">
-                                        <a class="btn btn-custom-size lg-size btn-primary btn-white-hover rounded-0" href="shop.html">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add Pagination -->
-                <div class="swiper-pagination with-bg d-md-none"></div>
-
-                <!-- Add Arrows -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-
+            @await Component.InvokeAsync("Slide")
         </div>
         <!-- Slider Area End Here -->
         <!-- Begin Banner With Category -->
@@ -204,7 +154,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="banner-item">
                                 <div class="banner-img img-zoom-effect">
-                                    <img class="img-full" src="~/assets/images/banner/1-1-370x250.jpg" alt="Banner Image">
+                                    <img class="img-full" src="~/assets/images/banner/1-2-370x250.jpg" alt="Banner Image">
                                     <div class="inner-content">
                                         <h5 class="offer">-10% Off</h5>
                                         <h4 class="title mb-5">Bell Pepper<br>Orange</h4>
@@ -249,353 +199,13 @@
         </div>
         <!-- Banner With Category End Here -->
         <!-- Begin Product Area -->
-        <div class="product-area product-style-2 section-space-y-axis-100">
-            <div class="container">
-                <div class="section-title text-center pb-55">
-                    <h2 class="title mb-0">Sản Phẩm</h2>
-                </div>
-                @RenderBody()
-            </div>
-        </div>
-        <!-- Product Area End Here -->
-        <!-- Begin Shipping Area -->
-        <div class="shipping-area section-space-top-100">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="shipping-item">
-                            <div class="shipping-img">
-                                <img src="~/assets/images/shipping/icon/plane.png" alt="Shipping Icon">
-                            </div>
-                            <div class="shipping-content">
-                                <h5 class="title">Free Shipping</h5>
-                                <p class="short-desc mb-0">Free Home Delivery Offer</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 pt-6 pt-md-0">
-                        <div class="shipping-item">
-                            <div class="shipping-img">
-                                <img src="~/assets/images/shipping/icon/earphones.png" alt="Shipping Icon">
-                            </div>
-                            <div class="shipping-content">
-                                <h5 class="title">Online Support</h5>
-                                <p class="short-desc mb-0">24/7 Online Support Provide</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 pt-6 pt-lg-0">
-                        <div class="shipping-item">
-                            <div class="shipping-img">
-                                <img src="~/assets/images/shipping/icon/shield.png" alt="Shipping Icon">
-                            </div>
-                            <div class="shipping-content">
-                                <h5 class="title">Secure Payment</h5>
-                                <p class="short-desc mb-0">Fully Secure Payment System</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Shipping Area End Here -->
-        <!-- Begin Product Area -->
-        <div class="product-area section-space-y-axis-100 product-style-2">
-            <div class="container">
-                <div class="section-title text-center pb-55">
-                    <span class="sub-title text-primary">See Our Latest</span>
-                    <h2 class="title mb-0">Arrival Products</h2>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="swiper-container product-slider swiper-arrow with-radius border-issue">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="product-item">
-                                        <div class="product-img img-zoom-effect">
-                                            <a href="single-product.html">
-                                                <img class="img-full" src="~/assets/images/product/medium-size/1-9-270x300.jpg" alt="Product Images">
-                                            </a>
-                                            <div class="product-add-action">
-                                                <ul>
-                                                    <li>
-                                                        <a href="cart.html">
-                                                            <i class="pe-7s-cart"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html">
-                                                            <i class="pe-7s-shuffle"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="wishlist.html">
-                                                            <i class="pe-7s-like"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-content">
-                                            <a class="product-name" href="single-product.html">Black Pepper Grains</a>
-                                            <div class="price-box pb-1">
-                                                <span class="new-price">$80.00</span>
-                                            </div>
-                                            <div class="rating-box">
-                                                <ul>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product-item">
-                                        <div class="product-img img-zoom-effect">
-                                            <a href="single-product.html">
-                                                <img class="img-full" src="~/assets/images/product/medium-size/1-10-270x300.jpg" alt="Product Images">
-                                            </a>
-                                            <div class="product-add-action">
-                                                <ul>
-                                                    <li>
-                                                        <a href="cart.html">
-                                                            <i class="pe-7s-cart"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html">
-                                                            <i class="pe-7s-shuffle"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="wishlist.html">
-                                                            <i class="pe-7s-like"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-content">
-                                            <a class="product-name" href="single-product.html">Peanut Big Bean</a>
-                                            <div class="price-box pb-1">
-                                                <span class="new-price">$80.00</span>
-                                            </div>
-                                            <div class="rating-box">
-                                                <ul>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product-item">
-                                        <div class="product-img img-zoom-effect">
-                                            <a href="single-product.html">
-                                                <img class="img-full" src="~/assets/images/product/medium-size/1-11-270x300.jpg" alt="Product Images">
-                                            </a>
-                                            <div class="product-add-action">
-                                                <ul>
-                                                    <li>
-                                                        <a href="cart.html">
-                                                            <i class="pe-7s-cart"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html">
-                                                            <i class="pe-7s-shuffle"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="wishlist.html">
-                                                            <i class="pe-7s-like"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-content">
-                                            <a class="product-name" href="single-product.html">Dried Lemon Green</a>
-                                            <div class="price-box pb-1">
-                                                <span class="new-price">$80.00</span>
-                                            </div>
-                                            <div class="rating-box">
-                                                <ul>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product-item">
-                                        <div class="product-img img-zoom-effect">
-                                            <a href="single-product.html">
-                                                <img class="img-full" src="~/assets/images/product/medium-size/1-12-270x300.jpg" alt="Product Images">
-                                            </a>
-                                            <div class="product-add-action">
-                                                <ul>
-                                                    <li>
-                                                        <a href="cart.html">
-                                                            <i class="pe-7s-cart"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html">
-                                                            <i class="pe-7s-shuffle"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="wishlist.html">
-                                                            <i class="pe-7s-like"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-content">
-                                            <a class="product-name" href="single-product.html">Natural Coconut</a>
-                                            <div class="price-box pb-1">
-                                                <span class="new-price">$80.00</span>
-                                            </div>
-                                            <div class="rating-box">
-                                                <ul>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                    <li><i class="pe-7s-star"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Add Arrows -->
-                            <div class="swiper-nav-wrap">
-                                <div class="swiper-button-next"></div>
-                            </div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @RenderBody()
         <!-- Product Area End Here -->
         <!-- Begin Banner Area -->
-        <div class="banner-with-testimonial py-10" data-bg-image="~/assets/images/banner/2-1-1920x523.jpg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="parallax-img-wrap">
-                            <div class="papaya">
-                                <div class="scene fill">
-                                    <div class="expand-width" data-depth="0.2">
-                                        <img src="~/assets/images/banner/inner-img/2-1-503x430.png" alt="Banner Images">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 align-self-center">
-                        <div class="swiper-container testimonial-slider text-white">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-content section-title">
-                                            <span class="sub-title">What People Say</span>
-                                            <h2 class="title mb-6">Client Feedback</h2>
-                                            <p class="short-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiu tempor incididj ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                                            <div class="user-info">
-                                                <div class="user-img">
-                                                    <img src="~/assets/images/testimonial/user/1.png" alt="User Image">
-                                                </div>
-                                                <div class="user-content">
-                                                    <span class="user-name">Oscar Thomsen</span>
-                                                    <span class="user-occupation">Customer</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-content section-title">
-                                            <span class="sub-title">What People Say</span>
-                                            <h2 class="title mb-6">Client Feedback</h2>
-                                            <p class="short-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiu tempor incididj ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                                            <div class="user-info">
-                                                <div class="user-img">
-                                                    <img src="~/assets/images/testimonial/user/1.png" alt="User Image">
-                                                </div>
-                                                <div class="user-content">
-                                                    <span class="user-name">Oscar Thomsen</span>
-                                                    <span class="user-occupation">Customer</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Add Arrows -->
-                            <div class="testimonial-button-next"></div>
-                            <div class="testimonial-button-prev"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Component.InvokeAsync("Contact")
         <!-- Banner Area End Here -->
         <!-- Begin Brand Area -->
-        <div class="brand-area section-space-y-axis-100">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="swiper-container brand-slider">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <a class="brand-item" href="javascript:void(0)">
-                                        <img src="~/assets/images/brand/1-1.png" alt="Brand Image">
-                                    </a>
-                                </div>
-                                <div class="swiper-slide">
-                                    <a class="brand-item" href="javascript:void(0)">
-                                        <img src="~/assets/images/brand/1-2.png" alt="Brand Image">
-                                    </a>
-                                </div>
-                                <div class="swiper-slide">
-                                    <a class="brand-item" href="javascript:void(0)">
-                                        <img src="~/assets/images/brand/1-3.png" alt="Brand Image">
-                                    </a>
-                                </div>
-                                <div class="swiper-slide">
-                                    <a class="brand-item" href="javascript:void(0)">
-                                        <img src="~/assets/images/brand/1-4.png" alt="Brand Image">
-                                    </a>
-                                </div>
-                                <div class="swiper-slide">
-                                    <a class="brand-item" href="javascript:void(0)">
-                                        <img src="~/assets/images/brand/1-5.png" alt="Brand Image">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Component.InvokeAsync("Producer")
         <!-- Brand Area End Here -->
         <!-- Begin Footer Area -->
         <div class="footer-area">
@@ -744,6 +354,42 @@
         var siteController = new SiteController();
         siteController.initialize();
     </script>
+
+    <script>
+
+        let __protocol = document.location.protocol;
+        let __baseUrl = __protocol + '//livechat.fpt.ai/v35/src';
+
+        let prefixNameLiveChat = 'Lê Vĩnh';
+        let objPreDefineLiveChat = {
+            appCode: '9ca7101542f09142f162bbc987f23478',
+            themes: '',
+            appName: prefixNameLiveChat ? prefixNameLiveChat : 'Live support',
+            thumb: '',
+            icon_bot: ''
+        },
+            appCodeHash = window.location.hash.substr(1);
+        if (appCodeHash.length == 32) {
+            objPreDefineLiveChat.appCode = appCodeHash;
+        }
+
+        let fpt_ai_livechat_script = document.createElement('script');
+        fpt_ai_livechat_script.id = 'fpt_ai_livechat_script';
+        fpt_ai_livechat_script.src = __baseUrl + '/static/fptai-livechat.js';
+        document.body.appendChild(fpt_ai_livechat_script);
+
+        let fpt_ai_livechat_stylesheet = document.createElement('link');
+        fpt_ai_livechat_stylesheet.id = 'fpt_ai_livechat_script';
+        fpt_ai_livechat_stylesheet.rel = 'stylesheet';
+        fpt_ai_livechat_stylesheet.href = __baseUrl + '/static/fptai-livechat.css';
+        document.body.appendChild(fpt_ai_livechat_stylesheet);
+
+        fpt_ai_livechat_script.onload = function () {
+            fpt_ai_render_chatbox(objPreDefineLiveChat, __baseUrl, 'livechat.fpt.ai:443');
+        }
+    </script>
+
+
     @RenderSection("scripts", required: false)
 </body>
 

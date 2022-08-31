@@ -115,12 +115,12 @@ namespace eShopSolution.WebApp.Controllers
             var token = result.ResultObj;
             var user = await _userApiClient.GetByUserName(registerRequest.UserName);
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Login", new { token, email = user.ResultObj.Email }, Request.Scheme);
-            var message = await MailUtils.MailUtils.SendGmail("Vinhvanvanvinh1612@gmail.com", user.ResultObj.Email,
+            var message = await MailUtils.MailUtils.SendGmail("vinh44604@donga.edu.vn", user.ResultObj.Email,
                                                               "Link xác nhận email", confirmationLink,
                                                               "your_email_here", "your_password_here");
 
             var email = new EmailService.EmailService();
-            email.Send("Vinhvanvanvinh1612@gmail.com", user.ResultObj.Email, "XÁC NHẬN TÀI KHOẢN", confirmationLink);
+            email.Send("vinh44604@donga.edu.vn", user.ResultObj.Email, "XÁC NHẬN TÀI KHOẢN", confirmationLink);
             return RedirectToAction(nameof(SuccessRegistration));
         }
 
@@ -179,12 +179,12 @@ namespace eShopSolution.WebApp.Controllers
             var token = await _userApiClient.ForgotPassword(request);
             var passwordResetLink = Url.Action(nameof(ResetPassword), "Login",
                                     new { email = request.Email, token = token.ResultObj }, Request.Scheme);
-            var message = await MailUtils.MailUtils.SendGmail("Vinhvanvanvinh1612@gmail.com", request.Email,
+            var message = await MailUtils.MailUtils.SendGmail("vinh44604@donga.edu.vn", request.Email,
                                                        "Link khôi phục mật khẩu", passwordResetLink,
                                                         "your_email_here", "your_password_here");
 
             var email = new EmailService.EmailService();
-            email.Send("Vinhvanvanvinh1612@gmail.com", request.Email, "Link khôi phục mật khẩu", passwordResetLink);
+            email.Send("vinh44604@donga.edu.vn", request.Email, "Link khôi phục mật khẩu", passwordResetLink);
 
             return View("ForgotPasswordConfirmation");
         }

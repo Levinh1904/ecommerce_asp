@@ -30,6 +30,10 @@ namespace eShopSolution.Data.Configurations
             builder.Property(x => x.Thumbnail).HasMaxLength(300).IsRequired(false);
 
             builder.Property(x => x.ProductImage).HasMaxLength(300).IsRequired(false);
+            builder.Property(x => x.Image1).HasMaxLength(300).IsRequired(false);
+            builder.Property(x => x.Image2).HasMaxLength(300).IsRequired(false);
+            builder.Property(x => x.Image3).HasMaxLength(300).IsRequired(false);
+            builder.Property(x => x.Image4).HasMaxLength(300).IsRequired(false);
 
             builder.HasOne(x => x.Category).WithMany(x => x.Products).HasForeignKey(x => x.CategoryId);
         }

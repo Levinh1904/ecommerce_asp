@@ -1,4 +1,5 @@
 using eShopSolution.ApiIntegration;
+using eShopSolution.Data.EF;
 using eShopSolution.ViewModels.System.Users;
 using eShopSolution.WebApp.Data;
 using eShopSolution.WebApp.LocalizationResources;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -94,6 +96,9 @@ namespace eShopSolution.WebApp
             services.AddTransient<IUserApiClient, UserApiClient>();
             services.AddTransient<IOrderApiClient, OrderApiClient>();
             services.AddTransient<ICouponApiClient, CouponApiClient>();
+            services.AddTransient<IContactApiClient, ContactApiClient>();
+            services.AddTransient<IBlogApiClient, BlogApiClient>();
+            services.AddTransient<IProducerApiClient, ProducerApiClient>();
 
             services.AddMarkdown();
 
@@ -103,7 +108,7 @@ namespace eShopSolution.WebApp
                 .AddApplicationPart(typeof(MarkdownPageProcessorMiddleware).Assembly);
 
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
-
+            services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionDb")));
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -149,7 +154,13 @@ namespace eShopSolution.WebApp
                         controller = "Product",
                         action = "Category"
                     });
-
+                endpoints.MapControllerRoute(
+                   name: "Product Producer En",
+                   pattern: "{culture}/producers/{id}", new
+                   {
+                       controller = "Product",
+                       action = "Producer"
+                   });
                 endpoints.MapControllerRoute(
                   name: "Product Category Vn",
                   pattern: "{culture}/danh-muc/{id}", new
@@ -157,7 +168,13 @@ namespace eShopSolution.WebApp
                       controller = "Product",
                       action = "Category"
                   });
-
+                endpoints.MapControllerRoute(
+                  name: "Product Producer Vn",
+                  pattern: "{culture}/thuong-hieu/{id}", new
+                  {
+                      controller = "Product",
+                      action = "Producer"
+                  });
                 endpoints.MapControllerRoute(
                     name: "Product Detail En",
                     pattern: "{culture}/products/{id}", new
@@ -165,7 +182,20 @@ namespace eShopSolution.WebApp
                         controller = "Product",
                         action = "Detail"
                     });
-
+                endpoints.MapControllerRoute(
+                    name: "Blog Detail En",
+                    pattern: "{culture}/blogUrl/{id}", new
+                    {
+                        controller = "Blog",
+                        action = "Details"
+                    });
+                endpoints.MapControllerRoute(
+                    name: "Producer Detail En",
+                    pattern: "{culture}/producerUrl/{id}", new
+                    {
+                        controller = "Home",
+                        action = "ViewByProducer"
+                    });
                 endpoints.MapControllerRoute(
                   name: "Product Detail Vn",
                   pattern: "{culture}/san-pham/{id}", new

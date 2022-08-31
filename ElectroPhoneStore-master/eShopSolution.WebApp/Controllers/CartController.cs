@@ -18,6 +18,12 @@ using System.Net.Http;
 using System.Text;
 using Stripe.Checkout;
 using PaymentMethod = eShopSolution.ViewModels.Utilities.Enums.PaymentMethod;
+using Microsoft.Extensions.Configuration;
+using PayPal.Core;
+using PayPal.v1.Payments;
+using BraintreeHttp;
+using eShopSolution.WebApp.Others;
+using Newtonsoft.Json.Linq;
 
 namespace eShopSolution.WebApp.Controllers
 {
@@ -27,13 +33,17 @@ namespace eShopSolution.WebApp.Controllers
         private readonly IOrderApiClient _orderApiClient;
         private readonly IUserApiClient _userApiClient;
         private readonly ICouponApiClient _couponApiClient;
-
-        public CartController(IProductApiClient productApiClient, IOrderApiClient orderApiClient, IUserApiClient userApiClient, ICouponApiClient couponApiClient)
+        private readonly string _clientId;
+        private readonly string _secretKey;
+        public double TyGiaUSD = 23300;//store in Database
+        public CartController(IProductApiClient productApiClient, IOrderApiClient orderApiClient, IUserApiClient userApiClient, ICouponApiClient couponApiClient, IConfiguration config)
         {
             _productApiClient = productApiClient;
             _orderApiClient = orderApiClient;
             _userApiClient = userApiClient;
             _couponApiClient = couponApiClient;
+            _clientId = config["PaypalSettings:ClientId"];
+            _secretKey = config["PaypalSettings:SecretKey"];
         }
 
         public IActionResult Index()
@@ -118,9 +128,9 @@ namespace eShopSolution.WebApp.Controllers
             if (result != "Failed")
             {
                 // mail admin when have new email
-                //var emai1 = new EmailService.EmailService();
-                //emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
-                //"ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
+                var emai1 = new EmailService.EmailService();
+                emai1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
+                "ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
                         + "<thead>"
@@ -192,7 +202,7 @@ namespace eShopSolution.WebApp.Controllers
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
                 var email2 = new EmailService.EmailService();
-                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                email2.Send("vinh44604@donga.edu.vn", userMail,
                                 "ĐẶT HÀNG THÀNH CÔNG",
                                 templateHtml
                                 + orderSummaryHtml
@@ -349,7 +359,7 @@ namespace eShopSolution.WebApp.Controllers
             {
                 // mail admin when have new email
                 var email1 = new EmailService.EmailService();
-                email1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                email1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
                     "ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
@@ -422,7 +432,7 @@ namespace eShopSolution.WebApp.Controllers
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
                 var email2 = new EmailService.EmailService();
-                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                email2.Send("vinh44604@donga.edu.vn", userMail,
                                 "ĐẶT HÀNG THÀNH CÔNG",
                                 templateHtml
                                 + orderSummaryHtml
@@ -584,5 +594,371 @@ namespace eShopSolution.WebApp.Controllers
 
             return Ok(currentCart);
         }
+        [Authorize]
+        public async Task<IActionResult> PaypalCheckout()
+         {
+            var environment = new SandboxEnvironment(_clientId, _secretKey);
+            var client = new PayPalHttpClient(environment);
+            
+            #region Create Paypal Order
+            var itemList = new ItemList()
+            {
+                Items = new List<Item>()
+            };
+
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0f;
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+            var total = price;
+            foreach (var item in currentCart.CartItems)
+            {
+                itemList.Items.Add(new Item()
+                {
+                    Name = item.Name,
+                    Currency = "USD",
+                    Price = Math.Round((double)item.Price / TyGiaUSD, 2).ToString(),
+                    Quantity = item.Quantity.ToString(),
+                    Sku = "sku",
+                    Tax = "0"
+                });
+            }
+            #endregion
+
+            var paypalOrderId = DateTime.Now.Ticks;
+            var hostname = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            var payment = new Payment()
+            {
+                Intent = "sale",
+                Transactions = new List<Transaction>()
+                {
+                    new Transaction()
+                    {
+                        Amount = new Amount()
+                        {
+                            Total = total.ToString(),
+                            Currency = "USD",
+                            Details = new AmountDetails
+                            {
+                                Tax = "0",
+                                Shipping = "0",
+                                Subtotal = total.ToString()
+                            }
+                        },
+                        ItemList = itemList,
+                        Description = $"Invoice #{paypalOrderId}",
+                        InvoiceNumber = paypalOrderId.ToString()
+                    }
+                },
+                RedirectUrls = new RedirectUrls()
+                {
+                    CancelUrl = $"{hostname}/vi/Cart/CheckoutFail",
+                    ReturnUrl = $"{hostname}/vi/Cart/CheckoutSuccess"
+                },
+                Payer = new Payer()
+                {
+                    PaymentMethod = "paypal"
+                }
+            };
+
+            PaymentCreateRequest request = new PaymentCreateRequest();
+            request.RequestBody(payment);
+
+            try
+            {
+                var response = await client.Execute(request);
+                var statusCode = response.StatusCode;
+                Payment result = response.Result<Payment>();
+
+                var links = result.Links.GetEnumerator();
+                string paypalRedirectUrl = null;
+                while (links.MoveNext())
+                {
+                    LinkDescriptionObject lnk = links.Current;
+                    if (lnk.Rel.ToLower().Trim().Equals("approval_url"))
+                    {
+                        //saving the payapalredirect URL to which user will be redirected for payment  
+                        paypalRedirectUrl = lnk.Href;
+                    }
+                }
+
+                return Redirect(paypalRedirectUrl);
+            }
+            catch (HttpException httpException)
+            {
+                var statusCode = httpException.StatusCode;
+                var debugId = httpException.Headers.GetValues("PayPal-Debug-Id").FirstOrDefault();
+
+                //Process when Checkout with Paypal fails
+                return Redirect("/vi/Cart/CheckoutFail");
+            }
+        }
+
+        public IActionResult CheckoutFail()
+        {
+            //Tạo đơn hàng trong database với trạng thái thanh toán là "Chưa thanh toán"
+            //Xóa session
+            return View();
+        }
+
+        public async Task<IActionResult> CheckoutSuccess(CheckoutViewModel request)
+        {
+            //Tạo đơn hàng trong database với trạng thái thanh toán là "Paypal" và thành công
+            //Xóa session
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0;
+
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+
+            // Tìm Guid của người mua để gán vào order
+            var claims = User.Claims.ToList();
+            var userId = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var users = await _userApiClient.GetAll();
+            var x = users.FirstOrDefault(x => x.Id.ToString() == userId);
+
+            // Order detail là lấy từ session chứ không lấy qua CheckoutViewModel, vì model binding không có bind cái danh sách sản phẩm
+            var model = GetCheckoutViewModel();
+            var orderDetails = new List<OrderDetailViewModel>();
+
+            foreach (var item in model.CartItems)
+            {
+                orderDetails.Add(new OrderDetailViewModel()
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                });
+            }
+
+            var checkoutRequest = new CheckoutRequest()
+            {
+                UserID = x.Id,
+                Address = request.CheckoutModel.Address,
+                Name = request.CheckoutModel.Name,
+                PhoneNumber = request.CheckoutModel.PhoneNumber,
+                OrderDetails = orderDetails,
+                PaymentMethod = PaymentMethod.COD,
+                Total = price,
+            };
+
+            if (model.CouponCode != null)
+            {
+                var coupons = await _couponApiClient.GetAll();
+                var coupon = coupons.FirstOrDefault(x => x.Code == model.CouponCode);
+                checkoutRequest.CouponId = coupon.Id;
+            }
+
+            var result = await _orderApiClient.CreateOrder(checkoutRequest);
+
+            if (result != "Failed")
+            {
+                // mail admin when have new email
+                //var emai1 = new EmailService.EmailService();
+                //emai1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
+                //"ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
+
+                var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
+                        + "<thead>"
+                        + "<tr>"
+                        + "<th>Tên sản phẩm</th>"
+                        + "<th>Đơn giá</th>"
+                        + "<th>Số lượng mua</th>"
+                        + "<th>Tổng cộng</th>"
+                        + "</tr>"
+                        + "</thead>"
+                        + "<tbody>";
+                decimal total = 0;
+                decimal amount = 0;
+                // mail client when placed order successfully
+                foreach (var product in currentCart.CartItems)
+                {
+                    amount = product.Price * product.Quantity;
+                    orderSummaryHtml +=
+                        "<tr>"
+                        + "<td>" + product.Name + "</td>"
+                        + "<td>" + product.Price.ToString("N0") + " <span>&#8363;</span>" + "</td>"
+                        + "<td>" + product.Quantity
+                        + "</td>"
+                        + "<td>" + amount.ToString("N0") + " <span>&#8363;</span>" + "</td>"
+                        + "</tr>"
+                        + "</tbody>";
+
+                    total += amount;
+                };
+
+                if (currentCart.Promotion != 0)
+                {
+                    orderSummaryHtml +=
+                        "<tfoot>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng</strong></td>"
+                        + $"<td><strong> {sub_price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "<tr>"
+                        + "<td><strong>Số tiền giảm</strong></td>"
+                        + $"<td><strong> {sub_price - (sub_price * ((100f - model.Promotion) / 100f)):N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng đã giảm</strong></td>"
+                        + $"<td><strong> {price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "</tfoot>"
+                        + "</table>";
+                }
+                else
+                {
+                    orderSummaryHtml +=
+                        "<tfoot>"
+                        + "<tr>"
+                        + "<td><strong>Tổng giá đơn hàng</strong></td>"
+                        + $"<td><strong> {price:N0} <span> &#8363;</span></strong></td>"
+                        + "</tr>"
+                        + "</tfoot>"
+                        + "</table>";
+                }
+
+                var templateHtml = "<h1>Electro Phone Store</h1>" + "<br>"
+                            + $"<h2>Quý khách đã đặt hàng thành công ! Đơn hàng của quý khách sẽ được duyệt sớm"
+                            + "<br>"
+                            + $"Mã đơn là {result}"
+                            + "<br>"
+                            + "<h3>Danh sách sản phẩm đã đặt</h3>"
+                            + "<br>";
+
+                var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+                var email2 = new EmailService.EmailService();
+                email2.Send("vinh44604@donga.edu.vn", userMail,
+                                "ĐẶT HÀNG THÀNH CÔNG",
+                                templateHtml
+                                + orderSummaryHtml
+                                );
+
+                currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+                currentCart.CartItems.Clear();
+                currentCart.Promotion = 0;
+                HttpContext.Session.SetString(SystemConstants.CartSession, JsonConvert.SerializeObject(currentCart));
+                TempData["SuccessMsg"] = "Order purchased successful";
+                return View(request);
+            }
+
+            ModelState.AddModelError("", "Đặt hàng thất bại");
+            return View(request);
+        }
+
+        public ActionResult MomoCheckout()
+        {
+            //request params need to request to MoMo system
+            string endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+            string partnerCode = "MOMO2L2Y20220513";
+            string accessKey = "p1AilmB8a6WMyO2g";
+            string serectkey = "cjcdWBmBeWBvAsEKJAg8hOlLnax7RBoa";
+            string orderInfo = "Thanh toán MoMo";
+            string returnUrl = "https://localhost:5003/vi/Cart/ConfirmPaymentClient";
+            string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
+            var session = HttpContext.Session.GetString(SystemConstants.CartSession);
+
+            var currentCart = new CartViewModel();
+            currentCart = JsonConvert.DeserializeObject<CartViewModel>(session);
+            long price = 0;
+            float sub_price = 0f;
+            if (currentCart.Promotion != 0)
+            {
+                var promotion = currentCart.Promotion;
+                sub_price = (float)(currentCart.CartItems.Sum(x => x.Price * x.Quantity));
+                price = (long)((long)sub_price * (100f - promotion) / 100f);
+            }
+            else
+            {
+                price = (long)currentCart.CartItems.Sum(x => x.Price * x.Quantity);
+            }
+            string amount = price.ToString();
+            string orderid = DateTime.Now.Ticks.ToString();
+            string requestId = DateTime.Now.Ticks.ToString();
+            string extraData = "";
+
+            //Before sign HMAC SHA256 signature
+            string rawHash = "partnerCode=" +
+                partnerCode + "&accessKey=" +
+                accessKey + "&requestId=" +
+                requestId + "&amount=" +
+                amount + "&orderId=" +
+                orderid + "&orderInfo=" +
+                orderInfo + "&returnUrl=" +
+                returnUrl + "&notifyUrl=" +
+                notifyurl + "&extraData=" +
+                extraData;
+
+            MoMoSecurity crypto = new MoMoSecurity();
+            //sign signature SHA256
+            string signature = crypto.signSHA256(rawHash, serectkey);
+
+            //build body json request
+            JObject message = new JObject
+            {
+                { "partnerCode", partnerCode },
+                { "accessKey", accessKey },
+                { "requestId", requestId },
+                { "amount", amount },
+                { "orderId", orderid },
+                { "orderInfo", orderInfo },
+                { "returnUrl", returnUrl },
+                { "notifyUrl", notifyurl },
+                { "extraData", extraData },
+                { "requestType", "captureMoMoWallet" },
+                { "signature", signature }
+
+            };
+
+            string responseFromMomo = PaymentRequest.sendPaymentRequest(endpoint, message.ToString());
+
+            JObject jmessage = JObject.Parse(responseFromMomo);
+
+            return Redirect(jmessage.GetValue("payUrl").ToString());
+        }
+
+        //Khi thanh toán xong ở cổng thanh toán Momo, Momo sẽ trả về một số thông tin, trong đó có errorCode để check thông tin thanh toán
+        //errorCode = 0 : thanh toán thành công (Request.QueryString["errorCode"])
+        //Tham khảo bảng mã lỗi tại: https://developers.momo.vn/#/docs/aio/?id=b%e1%ba%a3ng-m%c3%a3-l%e1%bb%97i
+        public ActionResult ConfirmPaymentClient()
+        {
+            //hiển thị thông báo cho người dùng
+            return View();
+        }
+
+        [HttpPost]
+        public void SavePayment()
+        {
+            //cập nhật dữ liệu vào db
+        }
     }
+
 }

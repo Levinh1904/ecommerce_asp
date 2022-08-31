@@ -69,6 +69,7 @@ namespace eShopSolution.ApiIntegration
             requestContent.Add(new StringContent(request.Price.ToString()), "price");
             requestContent.Add(new StringContent(request.Stock.ToString()), "stock");
             requestContent.Add(new StringContent(request.CategoryId.ToString()), "categoryId");
+            requestContent.Add(new StringContent(request.ProducerId.ToString()), "producerId");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Description) ? " " : request.Description.ToString()), "description");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Details) ? " " : request.Details.ToString()), "details");
@@ -115,11 +116,12 @@ namespace eShopSolution.ApiIntegration
             requestContent.Add(new StringContent(request.Price.ToString()), "price");
             requestContent.Add(new StringContent(request.Stock.ToString()), "stock");
             requestContent.Add(new StringContent(request.CategoryId.ToString()), "categoryId");
+            requestContent.Add(new StringContent(request.ProducerId.ToString()), "producerId");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Name) ? " " : request.Name.ToString()), "name");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Description) ? " " : request.Description.ToString()), "description");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Details) ? " " : request.Details.ToString()), "details");
 
-            var response = await client.PutAsync($"/api/products/" + request.Id, requestContent);
+            var response = await client.PostAsync($"/api/products/", requestContent);
             return response.IsSuccessStatusCode;
         }
 
@@ -147,20 +149,39 @@ namespace eShopSolution.ApiIntegration
 
             return data;
         }
+        public async Task<PagedResult<ProductViewModel>> GetAllByProducerPaging(GetPublicProductPagingRequest request)
+        {
+            var data = await GetAsync<PagedResult<ProductViewModel>>(
+                   $"/api/products/paging?pageIndex={request.PageIndex}" +
+                   $"&pageSize={request.PageSize}" +
+                   $"&producerId={request.ProducerId}");
 
+            return data;
+        }
         public async Task<ProductViewModel> GetById(int id)
         {
             var data = await GetAsync<ProductViewModel>($"/api/products/{id}");
 
             return data;
         }
+        public async Task<ProductViewModel> GetAll()
+        {
+            var data = await GetAsync<ProductViewModel>($"/api/products");
 
+            return data;
+        }
+        public async Task<ProductViewModel> GetMen(int producerID)
+        {
+            var data = await GetAsync<ProductViewModel>($"/api/products/{producerID}");
+
+            return data;
+        }
         public async Task<List<ProductViewModel>> GetFeaturedProducts(string languageId, int take)
         {
             var data = await GetListAsync<ProductViewModel>($"/api/products/featured/{take}");
             return data;
         }
-
+   
         public async Task<List<ProductViewModel>> GetLatestProducts(string languageId, int take)
         {
             var data = await GetListAsync<ProductViewModel>($"/api/products/latest/{take}");

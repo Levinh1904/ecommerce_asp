@@ -12,5 +12,6 @@ namespace eShopSolution.ViewModels.Sales
         public string Name { get; set; }
         public string Image { get; set; }
         public decimal Price { get; set; }
+        public double ThanhTien =>((double)(Price * Quantity));
     }
 }

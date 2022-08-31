@@ -1,0 +1,55 @@
+﻿@using eShopSolution.ViewModels.Catalog.Contacts
+@model List<ContactViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+<!-- NAVIGATION -->
+<!-- /NAVIGATION -->
+
+<div class="banner-with-testimonial py-10" data-bg-image="assets/images/banner/2-1-1920x523.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="parallax-img-wrap">
+                    <div class="papaya">
+                        <div class="scene fill">
+                            <div class="expand-width" data-depth="0.2">
+                                <img src="~/assets/images/4.jpg" alt="Banner Images"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 align-self-center">
+                <div class="swiper-container testimonial-slider text-white">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model)
+                        {
+                            <div class="swiper-slide">
+
+                                <div class="testimonial-item">
+                                    <div class="testimonial-content section-title">
+                                        <span class="sub-title">Nhận xét</span>
+                                        <h2 class="title mb-6">@item.Name</h2>
+                                        <p class="short-desc">@item.Tille</p>
+                                        <div class="user-info">
+                                            <div class="user-img">
+                                                <img src="~/assets/images/testimonial/user/1.png" alt="User Image">
+                                            </div>
+                                            <div class="user-content">
+                                                <span class="user-name">@item.Name</span>
+                                                <span class="user-occupation">Khách hàng</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        }
+                        </div>
+                    <!-- Add Arrows -->
+                    <div class="testimonial-button-next"></div>
+                    <div class="testimonial-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

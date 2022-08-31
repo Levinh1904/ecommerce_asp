@@ -54,8 +54,15 @@
                         <select asp-for="CategoryId" class="form-control form-control-md">
                             @foreach (var item in Model.Categories)
                             {
-                                <option value="@item.Id">@item.Name</option>
-                            }
+                <option value="@item.Id">@item.Name</option>}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProducerId" class="control-label"></label>
+                        <select asp-for="ProducerId" class="form-control form-control-md">
+                            @foreach (var item in Model.Producers)
+                            {
+                <option value="@item.Id">@item.Name</option>}
                         </select>
                     </div>
                     <div class="form-group">

@@ -32,14 +32,16 @@ namespace eShopSolution.WebApp.Controllers
         private readonly IProductApiClient _productApiClient;
         private readonly ICategoryApiClient _categoryApiClient;
         private readonly IConfiguration _configuration;
+        private readonly IProducerApiClient _producerApiClient;
 
         public HomeController(ILogger<HomeController> logger, 
-            IProductApiClient productApiClient, ICategoryApiClient categoryApiClient, IConfiguration configuration)
+            IProductApiClient productApiClient, ICategoryApiClient categoryApiClient, IConfiguration configuration, IProducerApiClient producerApiClient)
         {
             _logger = logger;
             _productApiClient = productApiClient;
             _categoryApiClient = categoryApiClient;
             _configuration = configuration;
+            _producerApiClient = producerApiClient;
 
         }
 
@@ -100,7 +102,22 @@ namespace eShopSolution.WebApp.Controllers
 
             return View(viewModel);
         }
-
+        public async Task<IActionResult> GetProduct(string keyword, int pageIndex = 1, int pageSize = 6)
+        {
+            var request = new GetManageProductPagingRequest()
+            {
+                Keyword = keyword,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+            };
+            var culture = CultureInfo.CurrentCulture.Name;
+            var data = await _productApiClient.GetFeaturedProducts(culture, SystemConstants.ProductSettings.NumberOfFeturedProducts);
+            if (TempData["result"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["result"];
+            }
+            return View(data);
+        }
         [HttpGet]
         public async Task<IActionResult> ViewByCategory(string sortOrder, int cateId, int pageIndex = 1, int pageSize = 8)
         {
@@ -132,7 +149,37 @@ namespace eShopSolution.WebApp.Controllers
 
             return View(data);
         }
+        [HttpGet]
+        public async Task<IActionResult> ViewByProducer(string sortOrder, int cateId, int pageIndex = 1, int pageSize = 8)
+        {
+            var request = new GetManageProductPagingRequest()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                ProducerId = cateId,
+                SortOption = sortOrder
+            };
 
+            var data = await _productApiClient.GetPagings(request);
+
+            List<string> sortOption = new List<string>()
+            {
+                "Tên A-Z",
+                "Giá thấp đến cao",
+                "Giá cao đến thấp"
+            };
+
+            ViewBag.SortOption = sortOption;
+            ViewBag.CurrentSortOrder = sortOrder;
+
+            foreach (var item in data.Items)
+            {
+                var producer = await _producerApiClient.GetById(item.ProducerId);
+                item.Producer  = producer;
+            }
+
+            return View(data);
+        }
         [HttpGet]
         public async Task<IActionResult> ViewBySearchProduct(string keyword, int? categoryId, int pageIndex = 1, int pageSize = 8)
         {

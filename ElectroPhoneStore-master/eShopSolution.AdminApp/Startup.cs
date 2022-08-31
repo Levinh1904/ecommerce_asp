@@ -1,4 +1,4 @@
-using eShopSolution.ApiIntegration;
+﻿using eShopSolution.ApiIntegration;
 using eShopSolution.ViewModels.System.Users;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using eShopSolution.AdminApp.Data;
 
 namespace eShopSolution.AdminApp
 {
@@ -56,9 +58,16 @@ namespace eShopSolution.AdminApp
             services.AddTransient<ICategoryApiClient, CategoryApiClient>();
             services.AddTransient<IOrderApiClient, OrderApiClient>();
             services.AddTransient<ICouponApiClient, CouponApiClient>();
+            services.AddTransient<IProducerApiClient, ProducerApiClient>();
+            services.AddTransient<ISlideApiClient, SlideApiClient>();
+            services.AddTransient<IBlogApiClient, BlogApiClient>();
+            services.AddTransient<IContactApiClient, ContactApiClient>();
 
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            services.AddDbContext<eShopSolutionAdminAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("eShopSolutionAdminAppContext")));
 
             #if DEBUG
             if (environment == Environments.Development)

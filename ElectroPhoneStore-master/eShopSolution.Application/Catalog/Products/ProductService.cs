@@ -42,6 +42,7 @@ namespace eShopSolution.Application.Catalog.Products
                 // id tự tăng
                 Name = request.Name,
                 CategoryId = request.CategoryId,
+                ProducerId = request.ProducerId,
                 Price = request.Price,
                 Stock = request.Stock,
                 Description = request.Description,
@@ -82,6 +83,7 @@ namespace eShopSolution.Application.Catalog.Products
 
             product.Name = request.Name;
             product.CategoryId = request.CategoryId;
+            product.ProducerId = request.ProducerId;
             product.Description = request.Description;
             product.Details = request.Details;
             product.Stock = request.Stock;
@@ -186,6 +188,7 @@ namespace eShopSolution.Application.Catalog.Products
                     Id = x.p.Id,
                     Name = x.p.Name,
                     CategoryId = x.p.CategoryId,
+                    ProducerId = x.p.ProducerId,
                     Description = x.p.Description,
                     Details = x.p.Details,
                     Price = x.p.Price,
@@ -219,7 +222,9 @@ namespace eShopSolution.Application.Catalog.Products
             var categories = await (from c in _context.Categories
                                     join p in _context.Products on c.Id equals p.CategoryId
                                     select p.Name).ToListAsync();
-
+            var producers = await (from c in _context.Producers
+                                    join p in _context.Products on c.Id equals p.ProducerId
+                                    select p.Name).ToListAsync();
             var product = await _context.Products.FindAsync(productId);
 
             // Lấy danh sách review
@@ -249,6 +254,7 @@ namespace eShopSolution.Application.Catalog.Products
                 Id = product.Id,
                 Name = product.Name != null ? product.Name : null,
                 CategoryId = product.CategoryId != 0 ? product.CategoryId : 0,
+                ProducerId = product.ProducerId != 0 ? product.ProducerId : 0,
                 //Category = category,
                 Description = product.Description != null ? product.Description : null,
                 Details = product.Details != null ? product.Details : null,
@@ -310,7 +316,45 @@ namespace eShopSolution.Application.Catalog.Products
             };
             return pagedResult;
         }
+        public async Task<PagedResult<ProductViewModel>> GetAllByProducerId(GetPublicProductPagingRequest request)
+        {
+            //1. Select join
+            var query = from p in _context.Products
+                        join c in _context.Producers on p.ProducerId equals c.Id
+                        select new { p };
+            //2. filter
+            if (request.ProducerId.HasValue && request.ProducerId.Value > 0)
+            {
+                query = query.Where(p => p.p.ProducerId == request.ProducerId);
+            }
+            //3. Paging
+            int totalRow = await query.CountAsync();
 
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new ProductViewModel()
+                {
+                    Id = x.p.Id,
+                    Name = x.p.Name,
+                    CategoryId = x.p.CategoryId,
+                    Description = x.p.Description,
+                    Details = x.p.Details,
+                    Price = x.p.Price,
+                    Stock = x.p.Stock,
+                    ThumbnailImage = x.p.Thumbnail,
+                    ProductImage = x.p.ProductImage
+                }).ToListAsync();
+
+            //4. Select and projection
+            var pagedResult = new PagedResult<ProductViewModel>()
+            {
+                TotalRecords = totalRow,
+                PageSize = request.PageSize,
+                PageIndex = request.PageIndex,
+                Items = data
+            };
+            return pagedResult;
+        }
         public async Task<List<ProductViewModel>> GetFeaturedProducts(int take)
         {
             //1. Select join
@@ -318,7 +362,7 @@ namespace eShopSolution.Application.Catalog.Products
                         join c in _context.Categories on p.CategoryId equals c.Id
                         select new { p };
 
-            var data = await query.OrderByDescending(x => x.p.DateCreated).Take(take)
+            var data = await query.OrderBy(x => x.p.Id).Take(take)
                 .Select(x => new ProductViewModel()
                 {
                     Id = x.p.Id,
@@ -340,7 +384,7 @@ namespace eShopSolution.Application.Catalog.Products
         {
             //1. Select join
             var query = from p in _context.Products
-                        join c in _context.Categories on p.CategoryId equals c.Id
+                        join c in _context.Producers on p.ProducerId equals c.Id
                         select new { p };
 
             var data = await query.OrderByDescending(x => x.p.DateCreated).Take(take)
@@ -349,6 +393,7 @@ namespace eShopSolution.Application.Catalog.Products
                     Id = x.p.Id,
                     Name = x.p.Name,
                     CategoryId = x.p.CategoryId,
+                    ProducerId = x.p.ProducerId,
                     DateCreated = x.p.DateCreated,
                     Description = x.p.Description,
                     Details = x.p.Details,

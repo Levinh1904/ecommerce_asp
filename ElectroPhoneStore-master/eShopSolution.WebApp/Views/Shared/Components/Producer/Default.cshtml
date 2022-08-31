@@ -1,0 +1,31 @@
+﻿@using eShopSolution.ViewModels.Catalog.Producers
+@model List<ProducerViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LazZiya.ExpressLocalization.ISharedCultureLocalizer _loc;
+@{
+    var culture = CultureInfo.CurrentCulture.Name;
+}
+<div class="brand-area section-space-y-axis-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="swiper-container brand-slider">
+                    <div class="swiper-wrapper">
+
+                        @foreach (var producer in Model)
+                        {
+                            var url = $"/{culture}/{"producerUrl"}/{producer.Id}";
+                            <div class="swiper-slide">
+                                <a class="brand-item" asp-action="ViewByProducer" asp-controller="Home" asp-route-cateId="@producer.Id">
+                                    <img src="@(Configuration["BaseAddress"] + producer.Image)" alt="Brand Image">
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -13,7 +13,7 @@ namespace eShopSolution.ApiIntegration
         Task<PagedResult<ProductViewModel>> GetPagings(GetManageProductPagingRequest request);
 
         Task<PagedResult<ProductViewModel>> GetAllByCategoryPaging(GetPublicProductPagingRequest request);
-
+        Task<PagedResult<ProductViewModel>> GetAllByProducerPaging(GetPublicProductPagingRequest request);
         Task<bool> CreateProduct(ProductCreateRequest request);
 
         Task<bool> UpdateProduct(ProductUpdateRequest request);
@@ -27,5 +27,6 @@ namespace eShopSolution.ApiIntegration
         Task<List<ProductViewModel>> GetLatestProducts(string languageId, int take);
 
         Task<string> AddReview(ProductDetailViewModel model);
+        Task<ProductViewModel> GetAll();
     }
 }

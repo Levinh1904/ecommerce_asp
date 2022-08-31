@@ -10,5 +10,6 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public string Keyword { get; set; }
 
         public int? CategoryId { get; set; }
+        public int? ProducerId { get; set; }
     }
 }

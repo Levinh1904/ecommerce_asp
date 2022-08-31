@@ -15,12 +15,14 @@ namespace eShopSolution.WebApp.Controllers
         private readonly IProductApiClient _productApiClient;
         private readonly ICategoryApiClient _categoryApiClient;
         private readonly IUserApiClient _userApiClient;
+        private readonly IProducerApiClient _producerApiClient;
 
-        public ProductController(IProductApiClient productApiClient, ICategoryApiClient categoryApiClient, IUserApiClient userApiClient)
+        public ProductController(IProductApiClient productApiClient, IProducerApiClient producerApiClient, ICategoryApiClient categoryApiClient, IUserApiClient userApiClient)
         {
             _productApiClient = productApiClient;
             _categoryApiClient = categoryApiClient;
             _userApiClient = userApiClient;
+            _producerApiClient = producerApiClient;
         }
 
         public async Task<IActionResult> Detail(int id)
@@ -46,14 +48,15 @@ namespace eShopSolution.WebApp.Controllers
             }
 
             var category = await _categoryApiClient.GetById(product.CategoryId);
+            var producer = await _producerApiClient.GetById(product.ProducerId);
 
             var productDetailViewModel = new ProductDetailViewModel()
             {
                 Category = category,
+                Producer = producer,
                 Product = product,
                 ListOfReviews = reviews
             };
-
             // get user review name
             foreach (var review in productDetailViewModel.ListOfReviews)
             {
@@ -95,6 +98,20 @@ namespace eShopSolution.WebApp.Controllers
             return View(new ProductCategoryViewModel()
             {
                 Category = await _categoryApiClient.GetById(id),
+                Products = products
+            });
+        }
+        public async Task<IActionResult> Producer(int id, string culture, int page = 1)
+        {
+            var products = await _productApiClient.GetPagings(new GetManageProductPagingRequest()
+            {
+                ProducerId = id,
+                PageIndex = page,
+                PageSize = 10
+            });
+            return View(new ProductProducerViewModel()
+            {
+                Producer = await _producerApiClient.GetById(id),
                 Products = products
             });
         }

@@ -1,0 +1,69 @@
+﻿
+@model List<eShopSolution.ViewModels.Catalog.Products.ProductViewModel>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@inject LazZiya.ExpressLocalization.ISharedCultureLocalizer _loc;
+@{ var culture = CultureInfo.CurrentCulture.Name; }
+<!-- NAVIGATION -->
+<!-- /NAVIGATION -->
+
+<div class="swiper-container product-slider swiper-arrow with-radius border-issue">
+    <div class="swiper-wrapper">
+        @foreach (var item in Model)
+        {
+            var url = $"/{culture}/{_loc["productUrl"]}/{item.Id}";
+            <div class="swiper-slide">
+                <div class="product-item">
+                    <div class="product-img img-zoom-effect">
+                        <a href="@url">
+                            <img class="img-full" src="@(Configuration["BaseAddress"] + item.ThumbnailImage)" alt="@item.Name">
+                        </a>
+                        <div class="product-add-action">
+                            <ul>
+                                <li>
+                                    @if (item.Stock < 0) { }
+                                    else
+                                    {
+                                        <a href="#" class="add-to-cart-btn add-to-cart" data-id="@item.Id">
+                                            <i class="pe-7s-cart"></i>
+                                        </a>
+
+                                    }
+                                </li>
+                                <li>
+                                    <a href="compare.html">
+                                        <i class="pe-7s-shuffle"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="wishlist.html">
+                                        <i class="pe-7s-like"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <a class="product-name" href="single-product.html">@item.Name</a>
+                        <div class="price-box pb-1">
+                            <span class="new-price">@item.Price.ToString("N0") <span>&#8363;</span></span>
+                        </div>
+                        <div class="rating-box">
+                            <ul>
+                                <li><i class="pe-7s-star"></i></li>
+                                <li><i class="pe-7s-star"></i></li>
+                                <li><i class="pe-7s-star"></i></li>
+                                <li><i class="pe-7s-star"></i></li>
+                                <li><i class="pe-7s-star"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Add Arrows -->
+    <div class="swiper-nav-wrap">
+        <div class="swiper-button-next"></div>
+    </div>
+    <div class="swiper-button-prev"></div>
+</div>
