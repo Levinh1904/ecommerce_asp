@@ -129,7 +129,7 @@ namespace eShopSolution.WebApp.Controllers
             {
                 // mail admin when have new email
                 var emai1 = new EmailService.EmailService();
-                emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                emai1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
                 "ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
@@ -202,7 +202,7 @@ namespace eShopSolution.WebApp.Controllers
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
                 var email2 = new EmailService.EmailService();
-                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                email2.Send("vinh44604@donga.edu.vn", userMail,
                                 "ĐẶT HÀNG THÀNH CÔNG",
                                 templateHtml
                                 + orderSummaryHtml
@@ -359,7 +359,7 @@ namespace eShopSolution.WebApp.Controllers
             {
                 // mail admin when have new email
                 var email1 = new EmailService.EmailService();
-                email1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                email1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
                     "ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
@@ -432,7 +432,7 @@ namespace eShopSolution.WebApp.Controllers
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
                 var email2 = new EmailService.EmailService();
-                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                email2.Send("vinh44604@donga.edu.vn", userMail,
                                 "ĐẶT HÀNG THÀNH CÔNG",
                                 templateHtml
                                 + orderSummaryHtml
@@ -783,7 +783,7 @@ namespace eShopSolution.WebApp.Controllers
             {
                 // mail admin when have new email
                 //var emai1 = new EmailService.EmailService();
-                //emai1.Send("Vinhvanvanvinh1612@gmail.com", "Vinhvanvanvinh1612@gmail.com",
+                //emai1.Send("vinh44604@donga.edu.vn", "vinh44604@donga.edu.vn",
                 //"ĐƠN HÀNG MỚI", $"Mã đơn hàng là <strong>{result}</strong>, nhấn vào <a href='" + "https://localhost:5002/Order/Detail?orderId=" + result + "'>đây</a> để đến trang quản lý đơn hàng này.");
 
                 var orderSummaryHtml = "<table border='1' style='border-collapse:collapse'>"
@@ -856,7 +856,7 @@ namespace eShopSolution.WebApp.Controllers
 
                 var userMail = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
                 var email2 = new EmailService.EmailService();
-                email2.Send("Vinhvanvanvinh1612@gmail.com", userMail,
+                email2.Send("vinh44604@donga.edu.vn", userMail,
                                 "ĐẶT HÀNG THÀNH CÔNG",
                                 templateHtml
                                 + orderSummaryHtml
